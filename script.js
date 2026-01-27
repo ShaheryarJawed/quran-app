@@ -86,7 +86,13 @@ async function initApp() {
         await fetchAllData();
     } catch (err) {
         console.error("CRITICAL: Failed to fetch dashboard data.", err);
-        document.body.innerHTML = '<div style="color:white; text-align:center; padding:5rem;"><h1>Connection Error</h1><p>Ensure the Backend Server is running.</p><p><code>npm run dev</code></p></div>';
+        document.body.innerHTML = `<div style="color:white; text-align:center; padding:5rem;">
+            <h1>Connection Error</h1>
+            <p>Ensure the Backend Server is running.</p>
+            <p style="color:#ef4444; font-family:monospace; background:#1e293b; padding:1rem; border-radius:8px; display:inline-block; margin-top:1rem;">
+                ${err.message}
+            </p>
+        </div>`;
         return;
     }
 
@@ -132,11 +138,11 @@ async function fetchAllData() {
 
     try {
         const [daily, courses, topics, duas, seerah] = await Promise.all([
-            fetch(`${API_BASE}/daily-feed`).then(r => r.json()),
-            fetch(`${API_BASE}/courses`).then(r => r.json()),
-            fetch(`${API_BASE}/topics`).then(r => r.json()),
-            fetch(`${API_BASE}/duas`).then(r => r.json()),
-            fetch(`${API_BASE}/seerah`).then(r => r.json())
+            fetch(`${API_BASE}/daily-feed`).then(async r => { if (!r.ok) throw new Error(`Daily Feed: ${r.status}`); return r.json(); }),
+            fetch(`${API_BASE}/courses`).then(async r => { if (!r.ok) throw new Error(`Courses: ${r.status}`); return r.json(); }),
+            fetch(`${API_BASE}/topics`).then(async r => { if (!r.ok) throw new Error(`Topics: ${r.status}`); return r.json(); }),
+            fetch(`${API_BASE}/duas`).then(async r => { if (!r.ok) throw new Error(`Duas: ${r.status}`); return r.json(); }),
+            fetch(`${API_BASE}/seerah`).then(async r => { if (!r.ok) throw new Error(`Seerah: ${r.status}`); return r.json(); })
         ]);
 
         // Reconstruct the structure previously in dashboard_data.js
