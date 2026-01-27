@@ -9,9 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            // Remove active class from all
             tabs.forEach(t => t.classList.remove('active'));
-            // Add active to clicked
             tab.classList.add('active');
 
             const mode = tab.dataset.tab;
@@ -29,82 +27,101 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- AUTH SIMULATION LOGIC ---
+    // --- REAL FIREBASE AUTH LOGIC ---
 
-    // 1. Google Login Simulation
+    const auth = firebase.auth();
     const btnGoogle = document.getElementById('btn-google-login');
+
+    // Helper: Check Config
+    function checkConfig() {
+        if (firebaseConfig.apiKey === "YOUR_API_KEY_HERE") {
+            alert("CRITICAL: You need to configure Firebase!\n\n1. Open 'firebase-config.js'\n2. Paste your keys from the Firebase Console.");
+            return false;
+        }
+        return true;
+    }
+
+    // Helper: Save User & Redirect
+    function handleAuthSuccess(user) {
+        // Bridge to existing App Logic
+        const appUser = {
+            uid: user.uid,
+            name: user.displayName || user.email.split('@')[0],
+            email: user.email,
+            photo: user.photoURL,
+            provider: user.providerData[0]?.providerId || 'email',
+            joined: new Date().toISOString()
+        };
+
+        // Save to LocalStorage (Legacy Bridge)
+        localStorage.setItem('currentUser', JSON.stringify(appUser));
+
+        // Redirect
+        window.location.href = 'index.html';
+    }
+
+    // 1. Google Login
     btnGoogle.addEventListener('click', () => {
-        // Simulate API Call delay
-        const originalText = btnGoogle.innerHTML;
-        btnGoogle.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> Signing in...`;
+        if (!checkConfig()) return;
 
-        setTimeout(() => {
-            // Mock User Data
-            const user = {
-                name: "Shaheryar Jawed", // Fallback name or from previous context
-                email: "user@gmail.com",
-                photo: "https://lh3.googleusercontent.com/a/default-user=s96-c", // Google generic avatar
-                provider: "google",
-                joined: new Date().toISOString()
-            };
+        const provider = new firebase.auth.GoogleAuthProvider();
 
-            // Save to LocalStorage
-            localStorage.setItem('currentUser', JSON.stringify(user));
+        btnGoogle.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> Check Popup...`;
 
-            // Redirect to Home
-            window.location.href = 'index.html';
-        }, 1500);
+        auth.signInWithPopup(provider)
+            .then((result) => {
+                handleAuthSuccess(result.user);
+            })
+            .catch((error) => {
+                console.error(error);
+                btnGoogle.innerHTML = `<i class='bx bx-error'></i> Error: ${error.message}`;
+            });
     });
 
-    // 2. Email Signup Simulation
+    // 2. Email Signup
     signupForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        if (!checkConfig()) return;
+
         const name = document.getElementById('signup-name').value;
         const email = document.getElementById('signup-email').value;
+        const password = signupForm.querySelector('input[type="password"]').value;
         const btn = signupForm.querySelector('button');
 
         btn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> Creating Account...`;
 
-        setTimeout(() => {
-            // Mock User Data (No photo for email users usually, generate initial avatar later)
-            const user = {
-                name: name,
-                email: email,
-                photo: null, // Will trigger Initials UI
-                color: getRandomColor(),
-                provider: "email",
-                joined: new Date().toISOString()
-            };
-
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            window.location.href = 'index.html';
-        }, 1500);
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((result) => {
+                const user = result.user;
+                // Update Profile with Name
+                user.updateProfile({ displayName: name })
+                    .then(() => handleAuthSuccess(user));
+            })
+            .catch((error) => {
+                btn.innerHTML = "Create Account";
+                alert(error.message);
+            });
     });
 
-    // 3. Email Login Simulation (Mock)
+    // 3. Email Login
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        if (!checkConfig()) return;
+
+        const email = loginForm.querySelector('input[type="email"]').value;
+        const password = loginForm.querySelector('input[type="password"]').value;
         const btn = loginForm.querySelector('button');
+
         btn.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> Verifying...`;
 
-        setTimeout(() => {
-            // For demo, just log them in as "Demo User" if they use email
-            const user = {
-                name: "Demo User",
-                email: "demo@deensphere.com",
-                photo: null,
-                color: "#10b981", // Emerald
-                provider: "email",
-                joined: new Date().toISOString()
-            };
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            window.location.href = 'index.html';
-        }, 1500);
+        auth.signInWithEmailAndPassword(email, password)
+            .then((result) => {
+                handleAuthSuccess(result.user);
+            })
+            .catch((error) => {
+                btn.innerHTML = "Sign In";
+                alert(error.message);
+            });
     });
 
 });
-
-function getRandomColor() {
-    const colors = ['#f87171', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa', '#f472b6'];
-    return colors[Math.floor(Math.random() * colors.length)];
-}
