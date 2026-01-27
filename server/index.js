@@ -13,7 +13,9 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../'))); // Serve static files from root
 
 // Database Path
-const DB_PATH = path.join(__dirname, 'data', 'db.json');
+// Database Path - Handle both local (node) and Vercel (serverless)
+// In Vercel, process.cwd() is safe. In local, it is also usually the project root.
+const DB_PATH = path.join(process.cwd(), 'server', 'data', 'db.json');
 
 // Helper to read DB
 const getDb = () => {
@@ -27,6 +29,23 @@ const getDb = () => {
 };
 
 // --- API ROUTES ---
+
+// 0. Debug Endpoint (Temporary)
+app.get('/api/debug', (req, res) => {
+    const cwd = process.cwd();
+    const dir = __dirname;
+    let files = [];
+    try {
+        files = fs.readdirSync(path.join(cwd, 'server', 'data'));
+    } catch (e) { files = ["Error: " + e.message]; }
+
+    res.json({
+        cwd,
+        __dirname: dir,
+        dbPath: DB_PATH,
+        filesInData: files
+    });
+});
 
 // 1. Daily Feed
 app.get('/api/daily-feed', (req, res) => {
