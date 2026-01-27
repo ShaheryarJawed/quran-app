@@ -21,15 +21,16 @@ function initAuth() {
         if (notifBtn) notifBtn.style.display = 'block'; // Show Notifications
 
         // Render Profile Chip
-        // Assuming currentUser has { name, email, photo }
-        // If photo is missing, use Initials
         const initials = currentUser.name ? currentUser.name.slice(0, 2).toUpperCase() : 'ME';
 
+        // Use Mock Color or Default
+        const avatarBg = currentUser.color || '#fbbf24';
+
         authContainer.innerHTML = `
-            <div id="header-profile-chip" class="user-chip" title="Account: ${currentUser.email}">
+            <div id="header-profile-chip" class="user-chip" title="Account: ${currentUser.email}" style="cursor:pointer; display:flex; align-items:center;">
                 ${currentUser.photo ?
-                `<img src="${currentUser.photo}" class="avatar-portal" style="object-fit:cover;">` :
-                `<div class="avatar-portal" style="background:${currentUser.color || '#fbbf24'}; color:#0f172a;">${initials}</div>`
+                `<img src="${currentUser.photo}" class="avatar-portal" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid #fbbf24;">` :
+                `<div class="avatar-portal" style="width:36px; height:36px; border-radius:50%; background:${avatarBg}; color:#0f172a; display:flex; align-items:center; justify-content:center; font-weight:bold; border:2px solid rgba(255,255,255,0.2);">${initials}</div>`
             }
             </div>
         `;
