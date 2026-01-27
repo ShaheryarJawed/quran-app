@@ -36,11 +36,12 @@ const getDb = () => {
 
 // --- ROUTES ---
 
-app.get('/api/test', (req, res) => {
+// Handle both /api/test and /test to be safe
+app.get(['/api/test', '/test'], (req, res) => {
     res.json({ status: "alive", time: new Date().toISOString() });
 });
 
-app.get('/api/debug', (req, res) => {
+app.get(['/api/debug', '/debug'], (req, res) => {
     const cwd = process.cwd();
     const paths = [
         path.join(cwd, 'server', 'data', 'db.json'),
@@ -59,24 +60,24 @@ app.get('/api/debug', (req, res) => {
     });
 });
 
-app.get('/api/daily-feed', (req, res) => {
+app.get(['/api/daily-feed', '/daily-feed'], (req, res) => {
     const db = getDb();
     const cycleIndex = Math.floor(Date.now() / (12 * 60 * 60 * 1000));
     const dataIndex = cycleIndex % (db.daily ? db.daily.length : 1);
     res.json(db.daily?.[dataIndex] || {});
 });
 
-app.get('/api/courses', (req, res) => {
+app.get(['/api/courses', '/courses'], (req, res) => {
     const db = getDb();
     res.json(db.courses || []);
 });
 
-app.get('/api/topics', (req, res) => { res.json(getDb().topics || {}); });
-app.get('/api/duas', (req, res) => { res.json(getDb().duas || {}); });
-app.get('/api/seerah', (req, res) => { res.json(getDb().seerah || []); });
+app.get(['/api/topics', '/topics'], (req, res) => { res.json(getDb().topics || {}); });
+app.get(['/api/duas', '/duas'], (req, res) => { res.json(getDb().duas || {}); });
+app.get(['/api/seerah', '/seerah'], (req, res) => { res.json(getDb().seerah || []); });
 
 // Mock Auth
-app.post('/api/auth/login', (req, res) => {
+app.post(['/api/auth/login', '/auth/login'], (req, res) => {
     res.json({ success: true, user: { name: req.body.username || "User", avatar: "SJ" } });
 });
 
