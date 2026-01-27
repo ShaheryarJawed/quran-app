@@ -81,4 +81,18 @@ app.post(['/api/auth/login', '/auth/login'], (req, res) => {
     res.json({ success: true, user: { name: req.body.username || "User", avatar: "SJ" } });
 });
 
+// Final Catch-All to debug routing issues
+app.use((req, res) => {
+    res.status(404).json({
+        error: "Route Not Found",
+        received_url: req.url,
+        received_method: req.method,
+        valid_routes: [
+            "/api/test", "/test",
+            "/api/daily-feed", "/daily-feed",
+            "/api/courses", "/courses"
+        ]
+    });
+});
+
 module.exports = app;
