@@ -43,12 +43,8 @@ function initAuth() {
 
     } else {
         // STATE: GUEST
+        // STATE: GUEST
         if (notifBtn) notifBtn.style.display = 'none'; // Hide Notifications
-
-        // Sign In Handler
-        if (signInBtn) {
-            signInBtn.onclick = mockGoogleLogin;
-        }
     }
 }
 
