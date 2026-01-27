@@ -41,8 +41,8 @@ function initAuth() {
                         <p style="color:white; font-size:0.9rem; margin:0; font-weight:600;">${currentUser.name}</p>
                         <p style="color:#94a3b8; font-size:0.8rem; margin:0; text-overflow:ellipsis; overflow:hidden;">${currentUser.email}</p>
                     </div>
-                    <a href="#" style="display:block; padding:0.8rem 1rem; color:#cbd5e1; text-decoration:none; transition:background 0.2s; font-size:0.9rem;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'"><i class='bx bx-user'></i> My Profile</a>
-                    <a href="#" style="display:block; padding:0.8rem 1rem; color:#cbd5e1; text-decoration:none; transition:background 0.2s; font-size:0.9rem;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'"><i class='bx bx-cog'></i> Settings</a>
+                    <a href="profile.html" style="display:block; padding:0.8rem 1rem; color:#cbd5e1; text-decoration:none; transition:background 0.2s; font-size:0.9rem;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'"><i class='bx bx-user'></i> My Profile</a>
+                    <a href="settings.html" style="display:block; padding:0.8rem 1rem; color:#cbd5e1; text-decoration:none; transition:background 0.2s; font-size:0.9rem;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'"><i class='bx bx-cog'></i> Settings</a>
                     <div style="border-top:1px solid rgba(255,255,255,0.1);"></div>
                     <a href="#" id="action-logout" style="display:block; padding:0.8rem 1rem; color:#f87171; text-decoration:none; transition:background 0.2s; font-size:0.9rem;" onmouseover="this.style.background='rgba(248, 113, 113, 0.1)'" onmouseout="this.style.background='transparent'"><i class='bx bx-log-out'></i> Sign Out</a>
                 </div>
