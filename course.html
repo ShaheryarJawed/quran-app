@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details | DeenSphere Pro</title>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- ICONS -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- STYLES -->
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .course-hero {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .course-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .course-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, #020617 10%, rgba(2, 6, 23, 0.5) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 3rem;
+        }
+
+        .course-meta-tag {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .syllabus-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .syllabus-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .play-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            color: #020617;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body class="hadith-dark-theme">
+
+    <!-- NAVBAR -->
+    <nav class="portal-nav">
+        <div class="nav-container"
+            style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div class="brand" style="display: flex; align-items: center; gap: 0.8rem;">
+                <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class='bx bxs-moon' style="font-size: 1.5rem; color: #fbbf24;"></i>
+                    <h1 style="font-size: 1.4rem; font-weight: 700; color: white; margin: 0;">DeenSphere <span
+                            style="color: #fbbf24; font-weight: 400;">Pro</span></h1>
+                </a>
+            </div>
+            <a href="index.html" class="btn-portal-secondary" style="color:white; border-color:rgba(255,255,255,0.2);">
+                <i class='bx bx-arrow-back'></i> Back to Dashboard
+            </a>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <main id="course-content-container" style="min-height: 80vh;">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- SCRIPTS -->
+    <!-- SCRIPTS -->
+    <!-- <script src="dashboard_data.js?v=3.6"></script> Removed: Fetched via API -->
+    <script>
+        let currentLang = 'en';
+        let currentCourse = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const courseId = urlParams.get('id');
+            const container = document.getElementById('course-content-container');
+
+            // FETCH FROM API
+            try {
+                const res = await fetch('http://localhost:3000/api/courses');
+                const courses = await res.json();
+
+                // Shim to match old structure access if needed, or directly assign
+                window.DASHBOARD_DATA = { courses: courses };
+            } catch (err) {
+                console.error("API Error", err);
+                container.innerHTML = '<div style="padding:4rem; text-align:center; color:white;"><h1>Connection Error</h1><p>Ensure Backend is running.</p></div>';
+                return;
+            }
+
+            if (!window.DASHBOARD_DATA?.courses) {
+                container.innerHTML = '<div style="padding:4rem; text-align:center; color:white;">Course data unavailable.</div>';
+                return;
+            }
+
+            // LIST VIEW
+            if (!courseId) {
+                renderAllCourses();
+                return;
+            }
+
+            // DETAIL VIEW
+            currentCourse = window.DASHBOARD_DATA.courses.find(c => c.id === courseId);
+
+            if (!currentCourse) {
+                container.innerHTML = '<div style="padding:4rem; text-align:center; color:white;">Course ID invalid. <br><a href="course.html" style="color:#fbbf24;">View All Courses</a></div>';
+                return;
+            }
+
+            renderCourse();
+        });
+
+        function renderAllCourses() {
+            const container = document.getElementById('course-content-container');
+            const courses = window.DASHBOARD_DATA.courses;
+
+            let html = `
+                <div style="max-width:1200px; margin:0 auto; padding:3rem 1.5rem;">
+                    <div style="text-align:center; margin-bottom:3rem;">
+                        <h1 style="color:#fbbf24; font-family:'Playfair Display', serif; font-size:2.5rem; margin-bottom:0.5rem;">Islamic Learning Series</h1>
+                        <p style="color:#cbd5e1; font-size:1.1rem;">Deepen your knowledge with structured courses.</p>
+                    </div>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:2rem;">
+            `;
+
+            courses.forEach(c => {
+                html += `
+                    <div class="course-card" onclick="window.location.href='course.html?id=${c.id}'" style="cursor:pointer; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:16px; overflow:hidden; transition:transform 0.2s;">
+                        <div style="position:relative; height:180px;">
+                            <img src="${c.image}" style="width:100%; height:100%; object-fit:cover;">
+                            <span style="position:absolute; top:1rem; left:1rem; background:rgba(0,0,0,0.6); color:${c.tagColor}; padding:0.3rem 0.8rem; border-radius:30px; font-size:0.8rem; font-weight:600; backdrop-filter:blur(4px);">${c.tag}</span>
+                        </div>
+                        <div style="padding:1.5rem;">
+                            <h3 style="color:white; font-family:'Playfair Display',serif; margin-bottom:0.5rem; font-size:1.2rem;">${c.title}</h3>
+                            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:1.5rem;">${c.subtitle}</p>
+                            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.1); padding-top:1rem;">
+                                <span style="color:#64748b; font-size:0.85rem;"><i class='bx bx-book-open'></i> ${c.syllabus.length} Lessons</span>
+                                <span style="color:#fbbf24; font-size:0.9rem; font-weight:600;">Start <i class='bx bx-right-arrow-alt'></i></span>
+                            </div>
+                        </div>
+                    </div>
+                 `;
+            });
+
+            html += `</div></div>`;
+            container.innerHTML = html;
+        }
+
+        let activeLessonIndex = -1;
+
+        function renderCourse() {
+            const container = document.getElementById('course-content-container');
+
+            // Default to first lesson if not set
+            if (activeLessonIndex === -1 && currentCourse.syllabus.length > 0) {
+                activeLessonIndex = 0;
+            }
+
+            // Build Sidebar List (Syllabus)
+            let sidebarHtml = currentCourse.syllabus.map((item, i) => `
+                <div class="sidebar-item ${i === activeLessonIndex ? 'active' : ''}" onclick="openLesson(${i})">
+                    <div style="display:flex; align-items:center; gap:0.8rem;">
+                        <div class="status-indicator">
+                            ${i === activeLessonIndex ? "<i class='bx bx-play-circle'></i>" : "<i class='bx bx-circle'></i>"}
+                        </div>
+                        <div>
+                            <h4 style="margin:0; font-size:1rem; font-weight:${i === activeLessonIndex ? '700' : '400'}; color:${i === activeLessonIndex ? '#fbbf24' : '#cbd5e1'};">${item.title}</h4>
+                            <span style="color:#64748b; font-size:0.8rem;">${item.duration.replace('Read: ', '')}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Get Current Lesson Content
+            const currentLesson = currentCourse.syllabus[activeLessonIndex];
+            const content = currentLang === 'en' ? currentLesson.content_en : currentLesson.content_ur;
+            const isLast = activeLessonIndex === currentCourse.syllabus.length - 1;
+
+            container.innerHTML = `
+                <!-- TOP HEADER (Compact) -->
+                <div class="course-header-compact" style="background:rgba(255,255,255,0.05); border-bottom:1px solid rgba(255,255,255,0.1); padding:1rem 2rem;">
+                    <div style="max-width:1400px; margin:0 auto; display:flex; align-items:center; gap:1.5rem;">
+                        <img src="${currentCourse.image}" style="width:50px; height:50px; border-radius:8px; object-fit:cover;">
+                        <div>
+                            <h1 style="margin:0; font-size:1.2rem; color:white; font-family:'Playfair Display',serif;">${currentCourse.title}</h1>
+                            <span style="font-size:0.85rem; color:#94a3b8;">${currentCourse.syllabus.length} Lessons • Bilingual Course</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="learning-layout">
+                    
+                    <!-- LEFT SIDEBAR -->
+                    <aside class="learning-sidebar">
+                        <div style="padding:1.5rem;">
+                            <h3 style="color:#94a3b8; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; margin-bottom:1rem;">Table of Contents</h3>
+                            <div class="sidebar-list">
+                                ${sidebarHtml}
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- MAIN CONTENT -->
+                    <main class="learning-content">
+                        <div class="content-wrapper">
+                            
+                            <!-- Lesson Header -->
+                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:2rem; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:1.5rem;">
+                                <div>
+                                    <span style="color:var(--primary-emerald); font-weight:600; font-size:0.9rem; margin-bottom:0.5rem; display:block;">Lesson ${activeLessonIndex + 1} of ${currentCourse.syllabus.length}</span>
+                                    <h2 style="margin:0; color:#fbbf24; font-family:'Playfair Display',serif; font-size:2.2rem;">${currentLesson.title}</h2>
+                                </div>
+                                <button onclick="toggleLang()" class="btn-portal-secondary" style="color:white; font-size:0.9rem; padding:0.5rem 1.2rem; display:flex; gap:0.5rem; align-items:center;">
+                                    <i class='bx bx-globe'></i> <span id="lang-label">${currentLang === 'en' ? 'Read in Urdu' : 'Read in English'}</span>
+                                </button>
+                            </div>
+
+                            <!-- Lesson Body -->
+                            <article id="lesson-body" class="typography-article ${currentLang === 'ur' ? 'rtl-mode' : ''}">
+                                ${content || "<p>Content coming soon...</p>"}
+                            </article>
+
+                            <!-- Navigation Footer -->
+                            <div style="margin-top:4rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.1); display:flex; justify-content:space-between;">
+                                <button 
+                                    onclick="openLesson(${activeLessonIndex - 1})" 
+                                    style="visibility:${activeLessonIndex === 0 ? 'hidden' : 'visible'}; background:transparent; border:1px solid rgba(255,255,255,0.2); color:#cbd5e1; padding:0.8rem 1.5rem; border-radius:30px; cursor:pointer; display:flex; align-items:center; gap:0.5rem; font-size:1rem;"
+                                >
+                                    <i class='bx bx-left-arrow-alt'></i> Previous
+                                </button>
+
+                                ${!isLast ? `
+                                    <button 
+                                        onclick="openLesson(${activeLessonIndex + 1})" 
+                                        class="btn-magic" 
+                                        style="padding:0.8rem 2rem; border-radius:30px; font-size:1rem; display:flex; align-items:center; gap:0.5rem;"
+                                    >
+                                        Next Lesson <i class='bx bx-right-arrow-alt'></i>
+                                    </button>
+                                ` : `
+                                    <button 
+                                        onclick="alert('Course Completed! MashaAllah.')" 
+                                        class="btn-magic" 
+                                        style="background:#10b981 !important; border-color:#10b981; color:white; padding:0.8rem 2rem; border-radius:30px; font-size:1rem;"
+                                    >
+                                        Mark Complete <i class='bx bx-check-circle'></i>
+                                    </button>
+                                `}
+                            </div>
+
+                        </div>
+                    </main>
+                </div>
+            `;
+        }
+
+        function openLesson(index) {
+            if (index < 0 || index >= currentCourse.syllabus.length) return;
+            activeLessonIndex = index;
+            renderCourse();
+            window.scrollTo(0, 0);
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'ur' : 'en';
+            renderCourse(); // Re-render whole view to apply direction styles correctly
+        }
+    </script>
+</body>
+
+</html>

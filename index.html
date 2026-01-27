@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nur Portal - DeenSphere</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400..700&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3.0">
+</head>
+
+<body class="portal-body">
+
+    <!-- 1. TOP NAVIGATION BAR (Desktop Style) -->
+    <nav class="portal-nav">
+        <div class="portal-container nav-flex">
+            <!-- Brand -->
+            <div class="nav-brand-portal">
+                <i class='bx bxs-moon pulse-icon'></i>
+                <span>DeenSphere <span style="font-weight:300; opacity:0.7;">Pro</span></span>
+            </div>
+
+            <!-- Links -->
+            <div class="nav-links-portal">
+                <a href="index.html" class="p-link active">Dashboard</a>
+                <a href="quran.html" class="p-link">Quran</a>
+                <a href="hadith.html" class="p-link">Hadith</a>
+                <a href="seerah.html" class="p-link">Seerah</a>
+                <a href="names.html" class="p-link">99 Names</a>
+                <a href="tasbih.html" class="p-link">Tasbih</a>
+                <a href="duas.html" class="p-link">Duas</a>
+            </div>
+
+            <!-- Profile/Actions -->
+            <div id="header-actions-container" class="nav-actions-portal">
+                <button id="header-search-btn" class="icon-btn-portal"><i class='bx bx-search'></i></button>
+
+                <!-- Notification (Hidden by default, shown when logged in) -->
+                <button id="header-notif-btn" class="icon-btn-portal" style="display:none;"><i
+                        class='bx bx-bell'></i></button>
+
+                <!-- Auth Container (Swaps between Sign In and Profile) -->
+                <div id="auth-container">
+                    <!-- Default: Guest State -->
+                    <button id="btn-signin" class="btn-portal-secondary"
+                        style="color:white; border-color:rgba(255,255,255,0.3); padding:0.4rem 1.2rem; font-size:0.9rem;">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN PORTAL CONTENT -->
+    <main class="portal-container" style="padding-top: 2rem;">
+
+        <!-- 2. SPLIT HERO SECTION -->
+        <section class="portal-hero">
+            <div class="hero-text-side">
+                <div class="hero-badge">
+                    <span id="date-display">Loading Date...</span> <!-- Preserved ID for Script -->
+                </div>
+                <h1 id="hero-arabic" class="hero-calligraphy"
+                    style="font-family:'Amiri', serif; font-size:4rem; color:#fbbf24; text-shadow: 0 0 20px rgba(251, 191, 36, 0.3);">
+                    آية اليوم</h1>
+                <h2 class="hero-title">Verse of the Day</h2>
+                <p id="hero-translation" class="hero-subtitle">"And He found you lost and guided [you]." - Quran 93:7
+                </p>
+                <div class="hero-buttons">
+                    <a id="hero-read-btn" href="quran.html" class="btn-portal-primary">Read Full Surah <i
+                            class='bx bx-right-arrow-alt'></i></a>
+                    <button id="hero-listen-btn" class="btn-portal-secondary"><i class='bx bx-play'></i> Listen</button>
+                </div>
+            </div>
+
+            <div class="hero-visual-side">
+                <div class="book-3d-container">
+                    <img src="images/quran_hero.png" alt="Holy Quran 3D"
+                        style="width: 100%; height: auto; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.5)); animation: float 6s ease-in-out infinite;">
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. DASHBOARD GRID (3 Columns) -->
+        <div class="portal-grid">
+
+            <!-- COL 1: PRAYER TIMES -->
+            <div class="portal-card prayer-card">
+                <div class="card-header-portal">
+                    <h3><i class='bx bx-time-five'></i> Prayer Times</h3>
+                    <button id="prayer-options-btn" class="icon-mini"><i
+                            class='bx bx-dots-horizontal-rounded'></i></button>
+                </div>
+
+                <div id="prayer-display-container" style="margin-top:1rem;">
+                    <!-- Static fallback, script.js might populate something similar or we can adapt script.js -->
+                    <div class="prayer-row active-prayer">
+                        <span>Fajr</span>
+                        <span>05:12 AM</span>
+                    </div>
+                    <div class="prayer-row">
+                        <span>Dhuhr</span>
+                        <span>12:30 PM</span>
+                    </div>
+                    <div class="prayer-row">
+                        <span>Asr</span>
+                        <span>04:15 PM</span>
+                    </div>
+                    <div class="prayer-row">
+                        <span>Maghrib</span>
+                        <span>06:45 PM</span>
+                    </div>
+                    <div class="prayer-row">
+                        <span>Isha</span>
+                        <span>08:15 PM</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COL 2: DAILY HIGHLIGHT (Used to be Quran Ayah) -->
+            <div class="portal-card highlight-card">
+                <div class="card-header-portal">
+                    <h3><i class='bx bxs-quote-alt-left'></i> Daily Reflection</h3>
+                    <span class="badge-portal">Ayah</span>
+                </div>
+
+                <div id="daily-ayah-body">
+                    <!-- Preserved ID used by script.js to inject daily ayah -->
+                    <p class="skeleton-text">Loading Daily Inspiration...</p>
+                </div>
+
+                <div class="card-footer-portal">
+                    <span id="ayah-ref" style="opacity:0.7;">Surah Al-Mulk</span>
+                    <div class="action-row">
+                        <button id="action-share-btn" class="btn-icon-soft"><i class='bx bx-share-alt'></i></button>
+                        <button id="action-bookmark-btn" class="btn-icon-soft"><i class='bx bx-bookmark'></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COL 3: DAILY HADITH / TRACKER -->
+            <div class="portal-card hadith-card-portal">
+                <div class="card-header-portal">
+                    <h3><i class='bx bxs-book-heart'></i> Daily Hadith</h3>
+                </div>
+                <div class="hadith-content-portal"
+                    style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+                    <p style="font-style:italic; opacity:0.9; line-height:1.6;">"The best among you are those who have
+                        the best manners and character."</p>
+                    <span style="font-size:0.8rem; color:#fbbf24; margin-top:1rem; display:block;">- Sahih
+                        Bukhari</span>
+                </div>
+                <!-- Hadith Links -->
+                <div style="display:flex; gap:0.5rem; margin-top:1rem;">
+                    <button class="btn-portal-outline" style="flex:1;" onclick="window.location.href='hadith.html'">Read
+                        Library</button>
+                    <button class="btn-portal-outline"
+                        style="flex:1; border-color:var(--accent-gold); color:var(--accent-gold);"
+                        onclick="window.location.href='seerah.html'">
+                        <i class='bx bx-history'></i> Seerah
+                    </button>
+                </div>
+            </div>
+
+            <!-- COL 4: DISCOVER 99 NAMES (New Premium Card) -->
+            <div class="portal-card names-card-portal"
+                style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 1px solid rgba(255,255,255,0.1); position:relative; overflow:hidden;">
+                <!-- Animated Stars Background for this card -->
+                <div
+                    style="position:absolute; top:0; left:0; width:100%; height:100%; background-image: radial-gradient(1px 1px at 20px 30px, #fff, transparent), radial-gradient(2px 2px at 50px 80px, rgba(255,215,0,0.5), transparent); opacity:0.3; animation: twinkle 5s infinite;">
+                </div>
+
+                <div class="card-header-portal" style="position:relative; z-index:2;">
+                    <h3 style="color:#fbbf24;"><i class='bx bxs-star'></i> Asma-ul-Husna</h3>
+                    <span class="badge-portal">New</span>
+                </div>
+
+                <div class="names-preview"
+                    style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; z-index:2; text-align:center;">
+                    <div
+                        style="font-family:'Amiri'; font-size:3rem; color:transparent; background:linear-gradient(to right, #fbbf24, #f59e0b); -webkit-background-clip:text; margin-bottom:0.5rem; text-shadow:0 0 20px rgba(251,191,36,0.3);">
+                        الله</div>
+                    <p style="font-size:0.9rem; color:#cbd5e1;">Explore the Galaxy of Divine Names.</p>
+                </div>
+
+                <button class="btn-portal-secondary"
+                    style="width:100%; margin-top:1rem; position:relative; z-index:2; background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.2); color:white;"
+                    onclick="window.location.href='names.html'">
+                    Enter Galaxy <i class='bx bx-right-arrow-alt'></i>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- 4. START LEARNING SECTION -->
+        <section class="learning-section">
+            <div class="section-header">
+                <h2>Start Learning</h2>
+                <a href="course.html" id="see-courses-link" class="see-more-link">See More</a>
+            </div>
+
+            <div id="courses-container" class="courses-scroll-container">
+                <!-- Injected by script.js -->
+                <div class="course-card skeleton-card"></div>
+            </div>
+
+            <!-- 5. EXPLORE TOPICS -->
+            <div class="topics-section">
+                <div class="section-header" style="margin-bottom: 1rem;">
+                    <h2>Explore Topics</h2>
+                </div>
+                <div class="topics-scroll">
+                    <button class="topic-pill">About The Quran ›</button>
+                    <button class="topic-pill">Verses about the Sunnah ›</button>
+                    <button class="topic-pill">What is Ramadan? ›</button>
+                    <button class="topic-pill">Life of Prophet ﷺ ›</button>
+                    <button class="topic-pill">Hajj & Umrah ›</button>
+                    <button class="topic-pill">Marriage & Family ›</button>
+                    <button class="topic-pill">Business Ethics ›</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SETTINGS MODAL (Injected) -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-content glass-modal" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h3>Reading Preferences</h3>
+                    <button onclick="closeSettingsModal()" class="close-btn"><i class='bx bx-x'></i></button>
+                </div>
+                <div class="modal-body" style="padding: 1.5rem;">
+
+                    <!-- Translation Section -->
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display:block; color:#475569; font-weight:600; margin-bottom:0.5rem;">Translation
+                            Language</label>
+                        <div class="segment-control"
+                            style="display:flex; background:#f1f5f9; padding:0.25rem; border-radius:10px;">
+                            <button class="segment-btn active" id="btn-lang-ur" onclick="setLanguage('ur')"
+                                style="flex:1; border:none; padding:0.5rem; border-radius:8px; cursor:pointer; background:white; font-weight:600; color:#0f172a; box-shadow:0 1px 2px rgba(0,0,0,0.1);">Urdu</button>
+                            <button class="segment-btn" id="btn-lang-en" onclick="setLanguage('en')"
+                                style="flex:1; border:none; padding:0.5rem; border-radius:8px; cursor:pointer; background:transparent; font-weight:600; color:#64748b;">English</button>
+                        </div>
+                    </div>
+
+                    <!-- Reciter Section -->
+                    <div style="margin-bottom: 2rem;">
+                        <label style="display:block; color:#475569; font-weight:600; margin-bottom:0.5rem;">Audio
+                            Reciter</label>
+                        <select id="modal-reciter-select" class="select-portal" style="width:100%; padding:0.8rem;">
+                            <!-- Injected by JS -->
+                        </select>
+                    </div>
+
+                    <button onclick="closeSettingsModal()"
+                        style="width:100%; background:var(--primary-emerald); color:white; border:none; padding:1rem; border-radius:12px; font-weight:600; cursor:pointer;">Save
+                        & Close</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- GENERIC INFO MODAL (For Courses/Topics) -->
+    <div id="info-modal" class="modal hidden">
+        <div class="modal-content glass-modal" style="max-width: 600px;">
+            <div class="modal-header" style="border:none; padding-bottom:0;">
+                <button onclick="document.getElementById('info-modal').classList.remove('active')" class="close-btn"
+                    style="background:rgba(0,0,0,0.05); width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:50%; margin-left:auto; cursor:pointer;"><i
+                        class='bx bx-x' style="font-size:1.5rem; color:#64748b;"></i></button>
+            </div>
+            <div id="modal-content" class="modal-body" style="padding: 0 1.5rem 1.5rem 1.5rem;">
+                <!-- Injected Content Goes Here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="en.ahmedraza.js"></script>
+    <script src="ur.jalandhry.js"></script>
+    <!-- <script src="dashboard_data.js?v=3.12"></script> Removed: Fetched via API now -->
+    <script src="script.js?v=3.9"></script>
+</body>
+
+</html>

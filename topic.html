@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Details | DeenSphere Pro</title>
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- ICONS -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- STYLES -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="hadith-dark-theme">
+
+    <!-- NAVBAR -->
+    <nav class="portal-nav">
+        <div class="nav-container"
+            style="max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div class="brand" style="display: flex; align-items: center; gap: 0.8rem;">
+                <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class='bx bxs-moon' style="font-size: 1.5rem; color: #fbbf24;"></i>
+                    <h1 style="font-size: 1.4rem; font-weight: 700; color: white; margin: 0;">DeenSphere <span
+                            style="color: #fbbf24; font-weight: 400;">Pro</span></h1>
+                </a>
+            </div>
+
+            <!-- Language Toggle -->
+            <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 4px; display: flex; gap: 4px;">
+                <button id="btn-en" onclick="toggleLanguage('en')"
+                    style="border: none; background: transparent; color: #94a3b8; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s;">ENG</button>
+                <button id="btn-ur" onclick="toggleLanguage('ur')"
+                    style="border: none; background: transparent; color: #94a3b8; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-family: 'Amiri', serif; font-weight: 600; font-size: 0.9rem; transition: all 0.3s;">اردو</button>
+            </div>
+            <a href="index.html" class="btn-portal-secondary" style="color:white; border-color:rgba(255,255,255,0.2);">
+                <i class='bx bx-arrow-back'></i> Back
+            </a>
+        </div>
+    </nav>
+
+    <!-- CONTENT -->
+    <main style="min-height: 80vh; max-width: 800px; margin: 3rem auto; padding: 0 1.5rem;">
+        <div id="topic-container"
+            style="background:rgba(255,255,255,0.05); padding:3rem; border-radius:24px; border:1px solid rgba(255,255,255,0.1);">
+            <!-- Injected Content -->
+        </div>
+    </main>
+
+    <!-- SCRIPTS -->
+    <script src="dashboard_data.js?v=3.16"></script>
+    <script>
+        let currentTopic = null;
+
+        function renderTopic(lang) {
+            if (!currentTopic) return;
+
+            // Determine content
+            let contentToRender = currentTopic.content;
+            let titleToRender = currentTopic.title;
+
+            if (currentTopic.content_en && currentTopic.content_ur) {
+                contentToRender = lang === 'ur' ? currentTopic.content_ur : currentTopic.content_en;
+            }
+            if (currentTopic.title_ur && lang === 'ur') {
+                titleToRender = currentTopic.title_ur;
+            }
+
+            // Styles based on language
+            const dir = lang === 'ur' ? 'rtl' : 'ltr';
+            const align = lang === 'ur' ? 'right' : 'left';
+            const fontFamily = lang === 'ur' ? "'Amiri', serif" : "'Outfit', sans-serif";
+            const titleFont = lang === 'ur' ? "'Amiri', serif" : "'Playfair Display', serif";
+
+            const container = document.getElementById('topic-container');
+            container.innerHTML = `
+                <span style="background:var(--primary-emerald); color:white; padding:0.4rem 1rem; border-radius:20px; font-weight:600; font-size:0.9rem; display:inline-block; margin-bottom:1.5rem;">Quick Read</span>
+                <h1 style="font-family:${titleFont}; font-size:3rem; color:#fbbf24; margin:0 0 1.5rem 0; direction:${dir}; text-align:${align}; line-height:1.4;">${titleToRender}</h1>
+                <div style="width:100px; height:4px; background:rgba(255,255,255,0.1); margin-bottom:2.5rem; border-radius:2px;"></div>
+                
+                <div style="color:#e2e8f0; font-size:1.2rem; line-height:2; font-family:${fontFamily}; direction:${dir}; text-align:${align};">
+                    ${contentToRender}
+                </div>
+                
+                <div style="margin-top:3rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.1); text-align:center;">
+                    <p style="color:#94a3b8; font-style:italic;">Benefit from this knowledge? Share it.</p>
+                </div>
+            `;
+
+            // Update Toggle State
+            document.getElementById('btn-en').style.background = lang === 'en' ? 'rgba(251, 191, 36, 0.2)' : 'transparent';
+            document.getElementById('btn-en').style.color = lang === 'en' ? '#fbbf24' : '#94a3b8';
+            document.getElementById('btn-ur').style.background = lang === 'ur' ? 'rgba(251, 191, 36, 0.2)' : 'transparent';
+            document.getElementById('btn-ur').style.color = lang === 'ur' ? '#fbbf24' : '#94a3b8';
+        }
+
+        function toggleLanguage(lang) {
+            // Optional: Save preference
+            // localStorage.setItem('userLanguage', lang);
+            renderTopic(lang);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const topicKey = urlParams.get('id');
+            const container = document.getElementById('topic-container');
+
+            if (!topicKey || !window.DASHBOARD_DATA?.topics) {
+                container.innerHTML = '<div style="text-align:center; color:white;">Topic not found.</div>';
+                return;
+            }
+
+            currentTopic = window.DASHBOARD_DATA.topics[topicKey];
+
+            if (!currentTopic) {
+                container.innerHTML = '<div style="text-align:center; color:white;">Topic data invalid.</div>';
+                return;
+            }
+
+            // Initial Render (Default to stored or EN)
+            const initialLang = localStorage.getItem('userLanguage') || 'en';
+            renderTopic(initialLang);
+        });
+    </script>
+</body>
+
+</html>

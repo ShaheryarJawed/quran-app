@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Islamic Concepts - DeenSphere</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=1.3">
+
+    <style>
+        .concepts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            padding-bottom: 3rem;
+        }
+
+        .concept-card {
+            background: var(--bg-white);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-soft);
+        }
+
+        .icon-box {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-soft);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 1.5rem;
+            color: var(--text-navy);
+            transition: 0.3s;
+        }
+
+        .concept-card:hover .icon-box {
+            background: var(--primary-emerald);
+            color: white;
+            transform: rotate(3deg);
+        }
+
+        .c-title {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--text-navy);
+        }
+
+        .c-desc {
+            color: var(--text-slate);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- TOP NAVBAR -->
+    <nav class="top-navbar">
+        <div class="nav-brand">
+            <i class='bx bxs-moon'></i>
+            <span>DeenSphere</span>
+        </div>
+        <div class="nav-center">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="quran.html" class="nav-link">Quran</a>
+            <a href="hadith.html" class="nav-link">Hadith</a>
+            <a href="duas.html" class="nav-link">Duas</a>
+            <a href="names.html" class="nav-link">99 Names</a>
+            <a href="concepts.html" class="nav-link active">Concepts</a>
+        </div>
+        <div class="nav-actions">
+            <i class='bx bx-search' style="font-size: 1.2rem; color: var(--text-slate); cursor:pointer;"></i>
+            <i class='bx bx-bell' style="font-size: 1.2rem; color: var(--text-slate); cursor:pointer;"></i>
+            <div class="avatar" style="width: 35px; height: 35px;">SJ</div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top: 2rem;">
+        <header class="top-header" style="align-items:center;">
+            <div class="header-content">
+                <h1 class="welcome-text">Understand Your Deen</h1>
+                <p class="date-text">Explore the fundamental concepts and beauty of Islam.</p>
+            </div>
+        </header>
+
+        <div id="c-grid" class="concepts-grid"></div>
+    </main>
+
+    <!-- Full Screen Modal -->
+    <div id="concept-modal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div id="m-icon" style="font-size: 4rem; margin-bottom: 1rem; animation: bounce 2s infinite;"></div>
+                <h2 id="m-title" class="modal-header-title"></h2>
+                <div id="m-desc" style="color: var(--text-slate); font-style: italic;"></div>
+            </div>
+
+            <div id="m-body" style="line-height: 1.8; color: var(--text-navy);"></div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+
+    <script src="concepts_data.js"></script>
+    <script>
+        const grid = document.getElementById('c-grid');
+        const modal = document.getElementById('concept-modal');
+        const mIcon = document.getElementById('m-icon');
+        const mTitle = document.getElementById('m-title');
+        const mDesc = document.getElementById('m-desc');
+        const mBody = document.getElementById('m-body');
+
+        // Render Cards
+        const conceptsData = window.ISLAMIC_DATA && window.ISLAMIC_DATA.concepts ? window.ISLAMIC_DATA.concepts : [];
+
+        conceptsData.forEach((c, index) => {
+            const el = document.createElement('div');
+            el.className = 'concept-card';
+            el.onclick = () => openModal(index);
+
+            el.innerHTML = `
+                <div class="icon-box">${c.icon}</div>
+                <div class="c-title">${c.title}</div>
+                <div class="c-desc">${c.desc}</div>
+            `;
+            grid.appendChild(el);
+        });
+
+        function openModal(index) {
+            const data = conceptsData[index];
+            if (!data) return;
+
+            mIcon.textContent = data.icon;
+            mTitle.textContent = data.title;
+            mDesc.textContent = data.desc;
+            mBody.innerHTML = data.details || data.article || "<p>Content coming soon...</p>";
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

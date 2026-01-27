@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Tasbih - DeenSphere</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3.0">
+
+    <style>
+        /* Tasbih Local Styles (Only Content adjustments, inheriting Navbar from global) */
+
+        .tasbih-center-stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding-bottom: 4rem;
+            min-height: calc(100vh - 100px);
+            /* Adjust for navbar */
+        }
+
+        .tasbih-card-glass {
+            background: rgba(255, 255, 255, 0.05);
+            /* Slightly clearer for dark mode */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 4rem;
+            border-radius: 40px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .dhikr-label {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            color: #fbbf24;
+            margin-bottom: 2rem;
+            min-height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s;
+        }
+
+        .count-display {
+            font-family: 'Outfit', sans-serif;
+            font-size: 6rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+
+        .btn-large-count {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            /* Glass button */
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            font-size: 3rem;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 3rem auto;
+        }
+
+        .btn-large-count:active {
+            transform: scale(0.92);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-large-count:hover {
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-control {
+            padding: 0.8rem 1.5rem;
+            border-radius: 99px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-control:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body class="portal-body"> <!-- EXACT DASHBOARD BACKGROUND -->
+
+    <!-- 1. PORTAL NAVIGATION (Global Class) -->
+    <nav class="portal-nav">
+        <div class="portal-container nav-flex">
+            <!-- Brand -->
+            <div class="nav-brand-portal">
+                <i class='bx bxs-moon pulse-icon'></i>
+                <span>DeenSphere <span style="font-weight:300; opacity:0.7;">Pro</span></span>
+            </div>
+
+            <!-- Links -->
+            <div class="nav-links-portal">
+                <a href="index.html" class="p-link">Dashboard</a>
+                <a href="quran.html" class="p-link">Quran</a>
+                <a href="hadith.html" class="p-link">Hadith Library</a>
+                <a href="seerah.html" class="p-link">Seerah</a>
+                <a href="names.html" class="p-link">99 Names</a>
+                <a href="tasbih.html" class="p-link active">Tasbih</a>
+                <!-- Active state handled by CSS if global? Or manually here -->
+                <a href="duas.html" class="p-link">Duas</a>
+            </div>
+
+            <!-- Profile/Actions -->
+            <div class="nav-actions-portal">
+                <button class="icon-btn-portal"><i class='bx bx-search'></i></button>
+                <div class="user-chip">
+                    <div class="avatar-portal">SJ</div>
+                    <span style="font-size:0.9rem;">Shaheryar</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. MAIN TASBIH AREA -->
+    <div class="tasbih-center-stage">
+
+        <div class="tasbih-card-glass">
+            <h2 class="dhikr-label" id="dhikr-text">Loading...</h2>
+            <div class="count-display" id="count">0</div>
+
+            <button class="btn-large-count" onclick="increment()">
+                <i class='bx bxs-hand-up'></i>
+            </button>
+
+            <div class="controls-row">
+                <button class="btn-control" onclick="reset()">
+                    <i class='bx bx-reset'></i> Reset
+                </button>
+                <button class="btn-control" onclick="changeDhikr()">
+                    <i class='bx bx-refresh'></i> Change
+                </button>
+            </div>
+        </div>
+
+        <p style="margin-top: 2rem; opacity: 0.4; font-size: 0.8rem; color:white;">Press Spacebar or Click to Count</p>
+    </div>
+
+    <script>
+        // --- Persistence Logic ---
+        const dhikrs = ["SubhanAllah", "Alhamdulillah", "Allahu Akbar", "Astaghfirullah", "La ilaha illallah"];
+
+        // State Object
+        let state = {
+            dIndex: 0,
+            counts: [0, 0, 0, 0, 0] // Mapped to dhikrs array
+        };
+
+        // Load State
+        function loadState() {
+            const saved = localStorage.getItem('tasbih_state_v1');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    // Validate structure if needed, or just merge
+                    if (parsed.counts && parsed.counts.length === dhikrs.length) {
+                        state = parsed;
+                    }
+                } catch (e) { console.error("Save load error", e); }
+            }
+            updateDisplay();
+        }
+
+        // Save State
+        function saveState() {
+            localStorage.setItem('tasbih_state_v1', JSON.stringify(state));
+        }
+
+        function increment() {
+            state.counts[state.dIndex]++;
+            saveState();
+            updateDisplay();
+
+            // FX
+            if (navigator.vibrate) navigator.vibrate(50);
+            const el = document.getElementById('count');
+            el.animate([{ transform: 'scale(1.05)' }, { transform: 'scale(1)' }], { duration: 150 });
+
+            // Gold Flash every 33
+            if (state.counts[state.dIndex] % 33 === 0 && state.counts[state.dIndex] !== 0) {
+                if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+                el.style.color = '#fbbf24';
+                setTimeout(() => el.style.color = 'white', 500);
+            }
+        }
+
+        function reset() {
+            state.counts[state.dIndex] = 0;
+            saveState();
+            updateDisplay();
+        }
+
+        function changeDhikr() {
+            // Fade out
+            const textEl = document.getElementById('dhikr-text');
+            textEl.style.opacity = 0;
+
+            setTimeout(() => {
+                // Change Index
+                state.dIndex = (state.dIndex + 1) % dhikrs.length;
+                saveState();
+
+                // Update Display (Loads saved count for new Dhikr)
+                updateDisplay();
+                textEl.style.opacity = 1;
+            }, 200);
+        }
+
+        function updateDisplay() {
+            document.getElementById('dhikr-text').textContent = dhikrs[state.dIndex];
+            document.getElementById('count').textContent = state.counts[state.dIndex];
+        }
+
+        // Init
+        loadState();
+
+        // Spacebar support
+        document.body.onkeyup = function (e) {
+            if (e.code === 'Space') increment();
+        }
+    </script>
+</body>
+
+</html>

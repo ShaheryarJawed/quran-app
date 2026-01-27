@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Path of Light - Seerah Timeline</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3.2">
+    <style>
+        /* Local Override for Seerah Specifics */
+        .seerah-body {
+            background-color: #1e1e2e;
+            /* Very Dark Base */
+            background-image:
+                linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.8)),
+                radial-gradient(circle at 50% 10%, rgba(251, 191, 36, 0.05) 0%, transparent 40%);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Timeline Container */
+        .timeline-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            padding: 4rem 2rem;
+        }
+
+        /* The Golden Path (Line) */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 15rem;
+            /* Start after intro */
+            bottom: 5rem;
+            width: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-50%);
+            border-radius: 4px;
+        }
+
+        /* Active Fill Line (Animated JS) */
+        .timeline-progress {
+            position: absolute;
+            left: 50%;
+            top: 15rem;
+            width: 4px;
+            background: linear-gradient(to bottom, #fbbf24, #d97706);
+            transform: translateX(-50%);
+            border-radius: 4px;
+            height: 0;
+            /* JS will update this */
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+            transition: height 0.1s linear;
+        }
+
+        /* Timeline Items */
+        .timeline-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 6rem;
+            width: 100%;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Node (The Dot) */
+        .timeline-node {
+            position: absolute;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background: #1e1e2e;
+            border: 2px solid #fbbf24;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fbbf24;
+            box-shadow: 0 0 0 4px rgba(30, 30, 46, 1);
+            transition: all 0.3s;
+        }
+
+        .timeline-item.active .timeline-node {
+            background: #fbbf24;
+            color: #1e1e2e;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+            transform: translateX(-50%) scale(1.2);
+        }
+
+        /* Content Card */
+        .timeline-content {
+            width: 45%;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-left: auto;
+            /* Default Right */
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Alternating Layout */
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 0;
+            margin-right: auto;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            text-align: left;
+        }
+
+        /* Card Hover */
+        .timeline-content:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #fbbf24;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Card Elements */
+        .t-year {
+            color: #fbbf24;
+            font-weight: 700;
+            font-family: 'Code', monospace;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .t-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #f1f5f9;
+            margin-bottom: 0.8rem;
+        }
+
+        .t-summary {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Read More Btn */
+        .t-read-btn {
+            margin-top: 1.5rem;
+            background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .t-read-btn:hover {
+            background: #fbbf24;
+            color: #1e1e2e;
+        }
+
+        .timeline-item:nth-child(even) .t-read-btn {
+            flex-direction: row-reverse;
+        }
+
+        /* Full Screen Modal */
+        .story-modal {
+            position: fixed;
+            inset: 0;
+            background: #0f172a;
+            z-index: 2000;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .story-modal.active {
+            transform: translateY(0);
+        }
+
+        .story-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem 8rem 2rem;
+        }
+
+        .story-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .story-year-badge {
+            background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .story-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: #f8fafc;
+            line-height: 1.1;
+        }
+
+        .story-body {
+            font-size: 1.2rem;
+            line-height: 1.9;
+            color: #cbd5e1;
+            font-family: 'Inter', sans-serif;
+            /* Readable serif */
+        }
+
+        .story-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        .story-lessons {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid #fbbf24;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-radius: 0 16px 16px 0;
+        }
+
+        /* Modal Controls (Language Toggle) */
+        .modal-controls {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            gap: 1rem;
+            z-index: 2100;
+        }
+
+        .lang-toggle-btn {
+            background: rgba(4, 120, 87, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fbbf24;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .lang-toggle-btn:hover {
+            background: rgba(4, 120, 87, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .close-story-btn {
+            /* Reset absolute position to work in flex */
+            position: static;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .close-story-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        /* Urdu Font Support */
+        .urdu-text {
+            font-family: 'Noto Nastaliq Urdu', 'Amiri', serif;
+            direction: rtl;
+        }
+    </style>
+</head>
+
+<body class="seerah-body">
+
+    <!-- NAV (Global Dark Emerald) -->
+    <nav class="portal-nav">
+        <div class="portal-container nav-flex">
+            <div class="nav-brand-portal">
+                <i class='bx bxs-moon pulse-icon'></i>
+                <span>DeenSphere <span style="font-weight:300; opacity:0.7;">Pro</span></span>
+            </div>
+            <div class="nav-links-portal">
+                <a href="index.html" class="p-link">Dashboard</a>
+                <a href="quran.html" class="p-link">Quran</a>
+                <a href="hadith.html" class="p-link">Hadith</a>
+                <a href="seerah.html" class="p-link active">Seerah</a> <!-- Active -->
+                <a href="names.html" class="p-link">99 Names</a>
+                <a href="tasbih.html" class="p-link">Tasbih</a>
+                <a href="duas.html" class="p-link">Duas</a>
+            </div>
+            <div class="nav-actions-portal">
+                <button class="icon-btn-portal"><i class='bx bx-search'></i></button>
+                <div class="user-chip">
+                    <div class="avatar-portal">SJ</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header style="text-align:center; padding: 4rem 1rem 0 1rem;">
+        <p style="color:#fbbf24; letter-spacing:3px; font-weight:600; font-size:0.9rem; text-transform:uppercase;">The
+            Biography</p>
+        <h1 style="font-family:'Playfair Display'; font-size:3.5rem; color:white; margin:0.5rem 0;">The Path of Light
+        </h1>
+        <p style="color:#94a3b8; max-width:600px; margin:0 auto;">A chronological journey through the life of the Final
+            Messenger (ﷺ), from his blessed birth to his triumphs.</p>
+    </header>
+
+    <!-- TIMELINE -->
+    <div class="timeline-container">
+        <!-- Lines -->
+        <div class="timeline-line"></div>
+        <div class="timeline-progress" id="progress-line"></div>
+
+        <div id="timeline-feed">
+            <!-- JS Injection -->
+        </div>
+
+        <div style="text-align:center; margin-top:4rem; color:#64748b;">
+            <p>End of Part 1. More chapters coming soon.</p>
+        </div>
+    </div>
+
+    <!-- STORY MODAL -->
+    <div id="story-modal" class="story-modal">
+        <!-- Controls -->
+        <div class="modal-controls">
+            <button class="lang-toggle-btn" onclick="toggleLanguage()">
+                <i class='bx bx-globe'></i> <span id="lang-label">Read in Urdu</span>
+            </button>
+            <button class="close-story-btn" onclick="closeStory()"><i class='bx bx-x'></i></button>
+        </div>
+
+        <div class="story-container">
+            <div class="story-header">
+                <span class="story-year-badge" id="s-year">Year</span>
+                <h1 class="story-title" id="s-title">Title</h1>
+                <p id="s-quote" style="margin-top:1rem; font-style:italic; opacity:0.7; font-size:1.1rem;"></p>
+            </div>
+
+            <div class="story-body" id="s-body">
+                <!-- Content -->
+            </div>
+
+            <div class="story-lessons">
+                <h3 id="s-lessons-title" style="color:#fbbf24; margin-bottom:1rem;"><i class='bx bxs-bulb'></i>
+                    Reflections & Lessons
+                </h3>
+                <ul id="s-lessons" style="color:#e2e8f0; line-height:1.8; padding-left:1.5rem;">
+                    <!-- List -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="seerah_data.js"></script>
+    <script>
+        // Render Timeline
+        const feed = document.getElementById('timeline-feed');
+        const modal = document.getElementById('story-modal');
+
+        // Modal Elements
+        const sYear = document.getElementById('s-year');
+        const sTitle = document.getElementById('s-title');
+        const sQuote = document.getElementById('s-quote');
+        const sBody = document.getElementById('s-body');
+        const sLessons = document.getElementById('s-lessons');
+        const sLessonsTitle = document.getElementById('s-lessons-title');
+        const langLabel = document.getElementById('lang-label');
+
+        let currentLang = 'en'; // 'en' or 'ur'
+        let currentIndex = 0;
+
+        function init() {
+            if (!window.SEERAH_DATA) return;
+
+            let html = '';
+            window.SEERAH_DATA.forEach((item, index) => {
+                // Use English by default for the timeline view
+                html += `
+                    <div class="timeline-item" data-index="${index}">
+                        <div class="timeline-node">
+                            <i class='bx ${item.icon}'></i>
+                        </div>
+                        <div class="timeline-content" onclick="openStory(${index})">
+                            <div class="t-year">${item.year}</div>
+                            <h2 class="t-title">${item.title_en}</h2>
+                            <p class="t-summary">${item.summary_en}</p>
+                            <button class="t-read-btn">Read Story <i class='bx bx-right-arrow-alt'></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+            feed.innerHTML = html;
+
+            // Trigger animation check initially
+            checkScroll();
+        }
+
+        // Scroll Animation Logic
+        window.addEventListener('scroll', checkScroll);
+
+        function checkScroll() {
+            const triggerBottom = window.innerHeight * 0.85;
+            const items = document.querySelectorAll('.timeline-item');
+            const progressLine = document.getElementById('progress-line');
+
+            let lastActiveY = 0;
+
+            items.forEach((item, idx) => {
+                const top = item.getBoundingClientRect().top;
+                const boxTop = item.getBoundingClientRect().top + window.scrollY; // Absolute pos
+
+                if (top < triggerBottom) {
+                    item.classList.add('visible');
+                    item.classList.add('active'); // Highlight node
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+
+            // Rudimentary progress bar fill
+            const actives = document.querySelectorAll('.timeline-item.active');
+            if (actives.length > 0) {
+                const last = actives[actives.length - 1];
+                const containerTop = document.querySelector('.timeline-container').getBoundingClientRect().top + window.scrollY;
+                const nodeTop = last.getBoundingClientRect().top + window.scrollY;
+                const height = (nodeTop - containerTop) - (15 * 16) + 100; // 15rem start offset approx
+                progressLine.style.height = height + 'px';
+            }
+        }
+
+        // Modal Logic
+        window.openStory = function (index) {
+            currentIndex = index;
+            currentLang = 'en'; // Default open in English
+            renderModalContent();
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.toggleLanguage = function () {
+            currentLang = currentLang === 'en' ? 'ur' : 'en';
+            renderModalContent();
+        }
+
+        function renderModalContent() {
+            const data = window.SEERAH_DATA[currentIndex];
+            if (!data) return;
+
+            if (currentLang === 'en') {
+                // English Render
+                sYear.textContent = data.year + " • " + data.age;
+                sTitle.textContent = data.title_en;
+                sQuote.textContent = '"' + (data.quote_en || "") + '"';
+                sBody.innerHTML = data.details_en;
+                sLessons.innerHTML = data.lessons_en.map(l => `<li>${l}</li>`).join('');
+
+                // Styling Reset
+                sBody.style.direction = 'ltr';
+                sBody.style.fontFamily = "'Inter', sans-serif";
+                sQuote.style.direction = 'ltr';
+                sTitle.style.fontFamily = "'Playfair Display', serif";
+                sLessons.style.direction = 'ltr';
+                sLessonsTitle.innerHTML = "<i class='bx bxs-bulb'></i> Reflections & Lessons";
+                langLabel.textContent = "Read in Urdu";
+
+            } else {
+                // Urdu Render
+                sYear.textContent = data.year + " • " + data.age;
+                sTitle.textContent = data.title_ur;
+                sQuote.textContent = '"' + (data.quote_ur || "") + '"';
+                sBody.innerHTML = data.details_ur;
+                sLessons.innerHTML = data.lessons_ur.map(l => `<li>${l}</li>`).join('');
+
+                // Styling for Urdu
+                sBody.style.direction = 'rtl';
+                sBody.style.fontFamily = "'Noto Nastaliq Urdu', serif";
+                sQuote.style.direction = 'rtl';
+                sTitle.style.fontFamily = "'Amiri', serif";
+                sLessons.style.direction = 'rtl';
+                sLessonsTitle.innerHTML = "<i class='bx bxs-bulb'></i> سبق اور نصیحت";
+                langLabel.textContent = "Read in English";
+            }
+        }
+
+        window.closeStory = function () {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeStory();
+        });
+
+        init();
+
+    </script>
+</body>
+
+</html>

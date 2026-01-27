@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quran Library - DeenSphere</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400..700&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3.1">
+</head>
+
+<body class="portal-body">
+
+    <!-- TOP NAVIGATION (Portal Style) -->
+    <nav class="portal-nav">
+        <div class="portal-container nav-flex">
+            <div class="nav-brand-portal">
+                <i class='bx bxs-book-open'></i>
+                <span>Quran Library</span>
+            </div>
+            <div class="nav-links-portal">
+                <a href="index.html" class="p-link">Dashboard</a>
+                <a href="quran.html" class="p-link active">Quran</a>
+                <a href="hadith.html" class="p-link">Hadith Library</a>
+                <a href="seerah.html" class="p-link">Seerah</a>
+                <a href="names.html" class="p-link">99 Names</a>
+                <a href="tasbih.html" class="p-link">Tasbih</a>
+                <a href="duas.html" class="p-link">Duas</a>
+            </div>
+            <div class="nav-actions-portal">
+                <div class="search-wrapper-portal">
+                    <i class='bx bx-search'></i>
+                    <input type="text" id="surah-search" placeholder="Search Surah..." class="portal-search-input">
+                </div>
+                <div class="user-chip">
+                    <div class="avatar-portal">SJ</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="portal-container" style="padding-top: 2rem;">
+
+        <!-- HERO SECTION (Compact) -->
+        <header class="library-header" style="text-align: center; margin-bottom: 3rem;">
+            <h1 class="hero-title" style="font-size: 2.5rem; margin-bottom:0.5rem;">The Noble Quran</h1>
+            <p style="color: #cbd5e1; opacity: 0.8;">"Recite with measured recitation."</p>
+        </header>
+
+        <!-- TABS (Surah / Juz / Audio) -->
+        <div class="quran-tabs">
+            <button class="tab-btn active" onclick="switchTab('surah')">Surah</button>
+            <button class="tab-btn" onclick="switchTab('juz')">Juz (Parah)</button>
+            <button class="tab-btn" onclick="switchTab('audio')">Audio Quran</button>
+        </div>
+
+        <!-- 1. SURAH GRID VIEW -->
+        <div id="surah-grid" class="portal-grid-surahs">
+            <!-- Glass Cards Injected Here -->
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- 2. JUZ GRID VIEW (Hidden by default) -->
+        <div id="juz-grid" class="juz-grid-portal hidden">
+            <!-- Juz Cards Injected Here -->
+        </div>
+
+        <!-- 3. AUDIO QURAN VIEW (New) -->
+        <div id="audio-quran-view" class="audio-view hidden"
+            style="max-width: 600px; margin: 0 auto; padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <i class='bx bxs-music' style="font-size: 3rem; color: #fbbf24;"></i>
+                <h2 style="font-family: 'Playfair Display', serif; color: white; margin-top: 0.5rem;">Listen to Quran
+                </h2>
+                <p style="color: #94a3b8;">Select a Surah and Reciter to begin.</p>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Surah Select -->
+                <div class="form-group">
+                    <label style="color: #e2e8f0; font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">Select
+                        Surah</label>
+                    <div style="position: relative;">
+                        <select id="audio-surah-select"
+                            style="width: 100%; padding: 1rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 12px; font-size: 1rem; appearance: none; cursor: pointer;">
+                            <option value="">Loading Surahs...</option>
+                        </select>
+                        <i class='bx bx-chevron-down'
+                            style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none;"></i>
+                    </div>
+                </div>
+
+                <!-- Reciter Select -->
+                <div class="form-group">
+                    <label style="color: #e2e8f0; font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">Select
+                        Reciter</label>
+                    <div style="position: relative;">
+                        <select id="audio-reciter-select"
+                            style="width: 100%; padding: 1rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 12px; font-size: 1rem; appearance: none; cursor: pointer;">
+                            <!-- Injected via JS -->
+                        </select>
+                        <i class='bx bx-chevron-down'
+                            style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none;"></i>
+                    </div>
+                </div>
+
+                <!-- Play Button -->
+                <button id="audio-quran-btn" onclick="startAudioQuranPlayback()"
+                    style="background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #0f172a; font-weight: 700; padding: 1rem; border-radius: 12px; border: none; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1rem; width: 100%;">
+                    <i class='bx bx-play-circle' style="font-size: 1.5rem;"></i> Start Listening
+                </button>
+
+                <!-- ADVANCED AUDIO PLAYER (Hidden by default) -->
+                <div id="audio-advanced-player" class="hidden"
+                    style="margin-top: 1.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem;">
+
+                    <!-- Time & Progress -->
+                    <div
+                        style="display:flex; justify-content:space-between; color:#94a3b8; font-size:0.8rem; margin-bottom:0.5rem;">
+                        <span id="audio-time-current">0:00</span>
+                        <span id="audio-time-total">0:00</span>
+                    </div>
+                    <input type="range" id="audio-progress-bar" value="0" step="0.1"
+                        style="width:100%; cursor:pointer; accent-color: #fbbf24; margin-bottom: 1.5rem;">
+
+                    <!-- Usage Controls -->
+                    <div style="display:flex; align-items:center; justify-content:center; gap: 2rem;">
+                        <!-- Prev -->
+                        <button onclick="playPreviousAyah()"
+                            style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer; opacity:0.8; transition:opacity 0.2s;">
+                            <i class='bx bx-skip-previous'></i>
+                        </button>
+
+                        <!-- Play/Pause (Main) -->
+                        <button id="adv-play-btn" onclick="togglePlay()"
+                            style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); border: none; color: #0f172a; font-size: 2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);">
+                            <i class='bx bx-pause'></i>
+                        </button>
+
+                        <!-- Next -->
+                        <button onclick="playNextAyah()"
+                            style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer; opacity:0.8; transition:opacity 0.2s;">
+                            <i class='bx bx-skip-next'></i>
+                        </button>
+                    </div>
+
+                    <!-- Volume -->
+                    <div
+                        style="display:flex; align-items:center; gap:0.5rem; margin-top:1.5rem; justify-content:center;">
+                        <i class='bx bx-volume-full' style="color:#64748b;"></i>
+                        <input type="range" id="audio-volume-slider" min="0" max="1" step="0.1" value="1"
+                            style="width:80px; accent-color: #64748b; cursor:pointer;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. DETAIL VIEW (Read Mode) -->
+        <div id="surah-detail-view" class="detail-view hidden" style="padding-bottom: 150px;">
+
+            <!-- Read Mode Tools -->
+            <!-- Control Island (Premium Toolbar) -->
+            <div class="control-island">
+                <div class="island-left">
+                    <button id="back-to-list" class="btn-magic library-btn">
+                        <i class='bx bx-arrow-back'></i> Library
+                    </button>
+                </div>
+
+                <h2 id="current-surah-name" class="island-title">Surah</h2>
+
+                <div class="island-right">
+                    <button id="tafsir-btn" class="btn-magic tafsir-glow"
+                        onclick="if(window.toggleTafsirDrawer) window.toggleTafsirDrawer()">
+                        <i class='bx bxs-book-content'></i> Tafsir
+                    </button>
+                    <!-- Language Toggle -->
+                    <div class="lang-toggle-container">
+                        <button id="toggle-lang-ur" class="lang-toggle-btn active"
+                            onclick="setLanguage('ur')">Urdu</button>
+                        <button id="toggle-lang-en" class="lang-toggle-btn" onclick="setLanguage('en')">Eng</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bismillah -->
+            <div class="bismillah-container-portal" style="text-align: center; margin: 2rem 0;">
+                <p style="font-family:'Amiri'; font-size:3rem; color: #fbbf24; margin:0;">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ
+                    ٱلرَّحِيمِ</p>
+            </div>
+
+            <!-- Ayah List -->
+            <div id="ayah-list" class="ayah-list-portal">
+                <!-- Ayahs injected here -->
+            </div>
+
+            <!-- Focus Mode Button (Floating) -->
+            <button id="focus-mode-toggle" class="floating-focus-btn">
+                <i class='bx bx-expand'></i>
+            </button>
+        </div>
+
+    </main>
+
+
+
+    </main>
+
+    <!-- AUDIO PLAYER BAR (Fixed Bottom - Premium Redesign) -->
+    <div class="audio-player-bar" id="audio-player-bar" style="display:flex;">
+        <div class="player-container-premium">
+
+            <!-- LEFT: Info -->
+            <div class="player-left">
+                <!-- <span id="player-surah-name" class="p-surah">Surah Al-Fatiha</span> -->
+                <select id="player-surah-select" class="p-surah-select">
+                    <option value="" disabled selected>Select Surah</option>
+                </select>
+                <span id="player-status-text" class="p-status">Ready to play</span>
+            </div>
+
+            <!-- CENTER: Controls -->
+            <div class="player-center">
+                <button id="prev-ayah-btn" class="p-control-btn"><i class='bx bx-skip-previous'></i></button>
+                <button id="play-pause-btn" class="p-play-btn"><i class='bx bx-play'></i></button>
+                <button id="next-ayah-btn" class="p-control-btn"><i class='bx bx-skip-next'></i></button>
+            </div>
+
+            <!-- RIGHT: Reciter Pill -->
+            <div class="player-right">
+                <div class="custom-reciter-dropdown" id="playbar-reciter-wrapper">
+                    <div class="custom-select-trigger" id="custom-reciter-trigger">
+                        <span id="p-reciter-label">Select Reciter</span>
+                        <i class='bx bx-chevron-up'></i>
+                    </div>
+                    <div class="custom-options-list" id="custom-reciter-options">
+                        <!-- Options injected by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress bar line -->
+        <div class="progress-line-container" id="progress-container">
+            <div class="progress-line-fill" id="progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- TAFSIR MODAL (Preserved) -->
+    <!-- SIDE DRAWER FOR TAFSIR -->
+    <div id="side-drawer-overlay" class="side-drawer-overlay" onclick="toggleTafsirDrawer()"></div>
+    <div id="tafsir-drawer" class="side-drawer">
+        <div class="drawer-header">
+            <h3 class="drawer-title">Tafsir Ibn Kathir</h3>
+            <button class="drawer-close-btn" onclick="toggleTafsirDrawer()">
+                <i class='bx bx-x'></i>
+            </button>
+        </div>
+        <div class="drawer-content" id="tafsir-drawer-content">
+            <!-- Content Injected Here -->
+            <div style="text-align:center; padding: 2rem;">
+                <p style="color:#64748b;">Select a Surah to view Tafsir.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="en.ahmedraza.js"></script>
+    <script src="ur.jalandhry.js"></script>
+    <script src="quran_data.js"></script> <!-- Fallback Data -->
+    <script src="quran_juz_data.js"></script> <!-- JUZ MAP DATA -->
+    <script src="quran.js?v=5.24"></script>
+    <script src="tafsir_data.js"></script>
+</body>
+
+</html>

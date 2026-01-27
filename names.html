@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>99 Names of Allah - The Galaxy of Names</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3.0">
+    <style>
+        /* GALAXY THEME OVERRIDES */
+        body {
+            background-color: #050510;
+            background-image:
+                radial-gradient(circle at 50% 0%, #1a1a40 0%, transparent 60%),
+                radial-gradient(circle at 85% 60%, rgba(76, 29, 149, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 15% 60%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+            color: #e2e8f0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Starry Background Animation */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            background-image:
+                radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+                radial-gradient(1px 1px at 40px 70px, #fff, transparent),
+                radial-gradient(1px 1px at 50px 160px, #fff, transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+                radial-gradient(1.5px 1.5px at 160px 120px, rgba(255, 255, 255, 0.8), transparent);
+            background-size: 200px 200px;
+            animation: twinkle 10s linear infinite;
+        }
+
+        @keyframes twinkle {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(-200px);
+            }
+        }
+
+        /* Nav Override for Galaxy Theme */
+        /* Nav Override for Galaxy Theme - REMOVED to match Dashboard */
+        /* .portal-nav {
+            background: rgba(5, 5, 16, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        } */
+
+        .galaxy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.5rem;
+            padding-bottom: 3rem;
+        }
+
+        /* STAR CARD */
+        .star-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            /* Circle */
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.05);
+            /* Subtle gold glow */
+        }
+
+        .star-card:hover {
+            transform: scale(1.15) translateY(-5px);
+            background: rgba(255, 215, 0, 0.1);
+            border-color: rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.1);
+            z-index: 10;
+        }
+
+        /* Number Badge */
+        .star-num {
+            position: absolute;
+            top: 10%;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Code', monospace;
+        }
+
+        .star-ar {
+            font-family: 'Amiri', serif;
+            font-size: 2rem;
+            color: #fbbf24;
+            /* Amber 400 */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            margin-top: 0.5rem;
+            transition: 0.3s;
+        }
+
+        .star-en {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-top: 0.2rem;
+            font-weight: 500;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+
+        .star-card:hover .star-ar {
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+            transform: scale(1.1);
+        }
+
+        .star-card:hover .star-en {
+            color: #fff;
+            opacity: 1;
+        }
+
+        /* MODAL STYLES (Galaxy Version) */
+        .galaxy-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.4s;
+        }
+
+        .galaxy-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .galaxy-modal {
+            width: 90%;
+            max-width: 500px;
+            background: linear-gradient(145deg, rgba(20, 20, 40, 0.9), rgba(10, 10, 25, 0.95));
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 215, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .galaxy-modal-overlay.active .galaxy-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Modal Content */
+        .m-close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .m-close:hover {
+            color: #fff;
+            transform: rotate(90deg);
+        }
+
+        .m-ar-large {
+            font-family: 'Amiri', serif;
+            font-size: 5rem;
+            background: linear-gradient(to bottom, #fbbf24, #d97706);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+        }
+
+        .m-en-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #f8fafc;
+            margin-bottom: 0.5rem;
+        }
+
+        .m-meaning {
+            font-size: 1.1rem;
+            color: #94a3b8;
+            font-style: italic;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .m-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: left;
+            margin-bottom: 1rem;
+            border-left: 3px solid #fbbf24;
+        }
+
+        .m-section h4 {
+            color: #fbbf24;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .m-text {
+            color: #e2e8f0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Glow animation behind modal */
+        .glow-fx {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body class="galaxy-theme">
+    <div class="stars"></div>
+
+    <!-- TOP NAVBAR -->
+    <nav class="portal-nav">
+        <div class="portal-container nav-flex">
+            <!-- Brand -->
+            <div class="nav-brand-portal">
+                <i class='bx bxs-moon pulse-icon'></i>
+                <span>DeenSphere <span style="font-weight:300; opacity:0.7;">Pro</span></span>
+            </div>
+
+            <!-- Links -->
+            <div class="nav-links-portal">
+                <a href="index.html" class="p-link">Dashboard</a>
+                <a href="quran.html" class="p-link">Quran</a>
+                <a href="hadith.html" class="p-link">Hadith</a>
+                <a href="names.html" class="p-link active">99 Names</a>
+                <a href="tasbih.html" class="p-link">Tasbih</a>
+                <a href="duas.html" class="p-link">Duas</a>
+            </div>
+
+            <!-- Profile/Actions -->
+            <div class="nav-actions-portal">
+                <button class="icon-btn-portal"><i class='bx bx-search'></i></button>
+                <button class="icon-btn-portal"><i class='bx bx-bell'></i></button>
+                <div class="user-chip">
+                    <div class="avatar-portal">SJ</div>
+                    <span style="font-size:0.9rem;">Shaheryar</span>
+                    <i class='bx bx-chevron-down'></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding-top: 2rem;">
+        <header class="top-header" style="align-items:center; margin-bottom: 3rem;">
+            <div class="header-content" style="text-align:center;">
+                <h1 class="welcome-text" style="color: white; text-shadow: 0 0 20px rgba(255,255,255,0.3);">
+                    Asma-ul-Husna</h1>
+                <p class="date-text" style="color: #94a3b8;">The Galaxy of Divine Attributes</p>
+            </div>
+        </header>
+
+        <div id="galaxy-grid" class="galaxy-grid">
+            <!-- Stars will be injected here -->
+        </div>
+    </main>
+
+    <!-- GALAXY MODAL -->
+    <div id="g-modal" class="galaxy-modal-overlay">
+        <div class="galaxy-modal">
+            <div class="glow-fx"></div>
+            <button class="m-close" onclick="closeGalaxyModal()">&times;</button>
+
+            <div id="gm-ar" class="m-ar-large"></div>
+            <h2 id="gm-en" class="m-en-title"></h2>
+            <div id="gm-mean" class="m-meaning"></div>
+
+            <div class="m-section">
+                <h4><i class='bx bx-book-open'></i> Description</h4>
+                <div id="gm-desc" class="m-text"></div>
+            </div>
+
+            <div class="m-section" style="border-left-color: #10b981;">
+                <h4><i class='bx bx-star'></i> Benefit & Reflection</h4>
+                <div id="gm-benefit" class="m-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="names_data.js"></script>
+    <script>
+        const grid = document.getElementById('galaxy-grid');
+        const modal = document.getElementById('g-modal');
+        const mAr = document.getElementById('gm-ar');
+        const mEn = document.getElementById('gm-en');
+        const mMean = document.getElementById('gm-mean');
+        const mDesc = document.getElementById('gm-desc');
+        const mBenefit = document.getElementById('gm-benefit');
+
+        // Render "Stars"
+        // Uses global NAMES_DATA from names_data.js
+        const data = window.NAMES_DATA || [];
+
+        function renderGalaxy() {
+            if (data.length === 0) {
+                grid.innerHTML = '<p style="color:white;">Loading Nebula...</p>';
+                return;
+            }
+
+            let html = '';
+            data.forEach((name, index) => {
+                html += `
+                    <div class="star-card" onclick="openGalaxyModal(${index})">
+                        <span class="star-num">${name.no}</span>
+                        <div class="star-ar">${name.ar}</div>
+                        <div class="star-en">${name.en}</div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        // Modal Functions
+        window.openGalaxyModal = function (index) {
+            const n = data[index];
+            if (!n) return;
+
+            mAr.textContent = n.ar;
+            mEn.textContent = n.en;
+            mMean.textContent = n.mean;
+            mDesc.textContent = n.desc || "The One who possesses this attribute perfectly.";
+            mBenefit.textContent = n.benefit || "Reflect upon this name to bring its light into your life.";
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        };
+
+        window.closeGalaxyModal = function () {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        // Close on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeGalaxyModal();
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeGalaxyModal();
+            }
+        });
+
+        // Init
+        renderGalaxy();
+
+    </script>
+</body>
+
+</html>
