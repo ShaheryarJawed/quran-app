@@ -1,20 +1,18 @@
-// FIREBASE CONFIGURATION
-// 1. Go to https://console.firebase.google.com/
-// 2. Add Project -> Select Web App (</>)
-// 3. Copy the "firebaseConfig" object below
-
+// FIREBASE CONFIGURATION (Managed by User Keys)
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY_HERE",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyD49dSw-VOSy3VudguEE23xGIIC3tqtx9Q",
+    authDomain: "deensphere-d9ce6.firebaseapp.com",
+    projectId: "deensphere-d9ce6",
+    storageBucket: "deensphere-d9ce6.firebasestorage.app",
+    messagingSenderId: "598560509692",
+    appId: "1:598560509692:web:ff38f4e4858f2a4c9cd179",
+    measurementId: "G-68JE8B3BER"
 };
 
-// Initialize Firebase
+// Initialize Firebase (Compat Mode)
 if (typeof firebase !== 'undefined') {
     firebase.initializeApp(firebaseConfig);
+    // console.log("Firebase Initialized");
 } else {
-    console.error("Firebase SDK not loaded.");
+    // console.warn("Firebase SDK not present (Safe for index.html, required for auth.html)");
 }

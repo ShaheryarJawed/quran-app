@@ -27,18 +27,47 @@ function initAuth() {
         const avatarBg = currentUser.color || '#fbbf24';
 
         authContainer.innerHTML = `
-            <div id="header-profile-chip" class="user-chip" title="Account: ${currentUser.email}" style="cursor:pointer; display:flex; align-items:center;">
-                ${currentUser.photo ?
+            <div style="position:relative;">
+                <div id="header-profile-chip" class="user-chip" title="Account: ${currentUser.email}" style="cursor:pointer; display:flex; align-items:center;">
+                    ${currentUser.photo ?
                 `<img src="${currentUser.photo}" class="avatar-portal" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:2px solid #fbbf24;">` :
                 `<div class="avatar-portal" style="width:36px; height:36px; border-radius:50%; background:${avatarBg}; color:#0f172a; display:flex; align-items:center; justify-content:center; font-weight:bold; border:2px solid rgba(255,255,255,0.2);">${initials}</div>`
             }
+                </div>
+                
+                <!-- Dropdown Menu -->
+                <div id="user-dropdown" style="display:none; position:absolute; top:120%; right:0; width:200px; background:#1e293b; border:1px solid rgba(255,255,255,0.1); border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.5); overflow:hidden; z-index:1000; animation:fadeIn 0.2s ease;">
+                    <div style="padding:1rem; border-bottom:1px solid rgba(255,255,255,0.1);">
+                        <p style="color:white; font-size:0.9rem; margin:0; font-weight:600;">${currentUser.name}</p>
+                        <p style="color:#94a3b8; font-size:0.8rem; margin:0; text-overflow:ellipsis; overflow:hidden;">${currentUser.email}</p>
+                    </div>
+                    <a href="#" style="display:block; padding:0.8rem 1rem; color:#cbd5e1; text-decoration:none; transition:background 0.2s; font-size:0.9rem;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'"><i class='bx bx-user'></i> My Profile</a>
+                    <a href="#" style="display:block; padding:0.8rem 1rem; color:#cbd5e1; text-decoration:none; transition:background 0.2s; font-size:0.9rem;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'"><i class='bx bx-cog'></i> Settings</a>
+                    <div style="border-top:1px solid rgba(255,255,255,0.1);"></div>
+                    <a href="#" id="action-logout" style="display:block; padding:0.8rem 1rem; color:#f87171; text-decoration:none; transition:background 0.2s; font-size:0.9rem;" onmouseover="this.style.background='rgba(248, 113, 113, 0.1)'" onmouseout="this.style.background='transparent'"><i class='bx bx-log-out'></i> Sign Out</a>
+                </div>
             </div>
         `;
 
-        // Settings/Logout Handler
-        document.getElementById('header-profile-chip').onclick = () => {
-            const action = confirm(`Signed in as ${currentUser.name}\n\nDo you want to Log Out?`);
-            if (action) signOut();
+        // Toggle Dropdown
+        const chip = document.getElementById('header-profile-chip');
+        const dropdown = document.getElementById('user-dropdown');
+
+        chip.onclick = (e) => {
+            e.stopPropagation();
+            const isVisible = dropdown.style.display === 'block';
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        };
+
+        // Close on click outside
+        document.addEventListener('click', () => {
+            if (dropdown) dropdown.style.display = 'none';
+        });
+
+        // Logout Action
+        document.getElementById('action-logout').onclick = (e) => {
+            e.preventDefault();
+            signOut();
         };
 
     } else {
