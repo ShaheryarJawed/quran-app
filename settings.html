@@ -173,7 +173,7 @@
                     <p>Use darker color palette for low light.</p>
                 </div>
                 <label class="switch">
-                    <input type="checkbox" checked disabled>
+                    <input type="checkbox" id="toggle-darkmode">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -206,15 +206,37 @@
     </div>
 
     <script>
-        // Simple Interaction Check
-        document.getElementById('toggle-notif').addEventListener('change', (e) => {
-            if (e.target.checked) {
-                if ("Notification" in window) {
-                    Notification.requestPermission().then(permission => {
-                        if (permission !== "granted") e.target.checked = false;
-                    });
-                }
+        document.addEventListener('DOMContentLoaded', () => {
+            // Dark Mode Logic
+            const darkModeToggle = document.getElementById('toggle-darkmode');
+            const isDark = localStorage.getItem('theme') !== 'light'; // Default to Dark
+
+            // Set Initial State
+            darkModeToggle.checked = isDark;
+            if (!isDark) {
+                document.body.classList.add('light-mode');
             }
+
+            darkModeToggle.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    document.body.classList.remove('light-mode');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.classList.add('light-mode');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+
+            // Notification Logic
+            document.getElementById('toggle-notif').addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    if ("Notification" in window) {
+                        Notification.requestPermission().then(permission => {
+                            if (permission !== "granted") e.target.checked = false;
+                        });
+                    }
+                }
+            });
         });
     </script>
 </body>
