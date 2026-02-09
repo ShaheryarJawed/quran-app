@@ -4,12 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#fbbf24">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="DeenSphere">
-    <link rel="apple-touch-icon" href="/icon-192.png">
     <title>Hadith - DeenSphere Pro ﷺ</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link
@@ -48,18 +42,6 @@
 
             <!-- Profile/Actions -->
             <div id="header-actions-container" class="nav-actions-portal">
-                <!-- Global Search -->
-                <div class="global-search-wrapper" style="position: relative;">
-                    <div class="search-input-wrapper">
-                        <i class='bx bx-search'
-                            style="position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1.1rem;"></i>
-                        <input type="text" id="global-search-input" placeholder="Search Hadith..."
-                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; padding: 0.5rem 1rem 0.5rem 2.5rem; color: white; font-size: 0.9rem; width: 250px; outline: none; transition: all 0.3s;">
-                    </div>
-                    <!-- Search Results Dropdown -->
-                    <div id="search-results" class="search-results-dropdown" style="display: none;"></div>
-                </div>
-
                 <div id="auth-container">
                     <button id="btn-signin" class="btn-portal-secondary"
                         style="color:white; border-color:rgba(255,255,255,0.3); padding:0.4rem 1.2rem; font-size:0.9rem;">

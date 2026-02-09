@@ -1,0 +1,28 @@
+/* ============================================
+   ULTIMATE SCROLLBAR FIX - Force on all pages
+   ============================================ */
+
+/* Force scrollbar to ALWAYS show */
+:root {
+  overflow-y: scroll !important;
+}
+
+html {
+  overflow-y: scroll !important;
+  height: 100% !important;
+}
+
+body {
+  overflow-y: scroll !important;
+  min-height: 101vh !important; /* Force scrollbar by making body taller */
+}
+
+/* Ensure body accounts for fixed navbar */
+body {
+  padding-top: 80px !important;
+}
+
+main, .main-content {
+  padding-top: 1rem !important;
+}
+

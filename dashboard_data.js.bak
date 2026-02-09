@@ -556,7 +556,7 @@ window.DASHBOARD_DATA = {
                     title: "The Vision & The Plot",
                     duration: "Read: 20 min",
                     content_en: `
-                <h3> The Context of Revelation</h3>
+                < h3 > The Context of Revelation</h3 >
                         <p>Surah Yusuf was revealed during the "Year of Sorrow" ('Aam al-Huzn), shortly after the Prophet ﷺ lost his beloved wife Khadija (RA) and his uncle Abu Talib. The Prophet ﷺ was heartbroken and facing intense persecution. Allah sent this Surah not just as a story, but as a consolation—telling him, "O Muhammad, if Joseph could rise from the bottom of a well to the throne of Egypt, your mission will also succeed despite the plots of your people."</p>
 
                         <h3>The Dream of Leadership</h3>
@@ -581,7 +581,7 @@ window.DASHBOARD_DATA = {
                         <p>They threw him into the dark well (Jubb). Imagine the trauma of a child, betrayed by his own flesh and blood, left in darkness. Yet, Allah revealed to him essentially: "You will remind them of this affair of theirs while they perceive not." In that moment of absolute abandonment, Allah was his companion. This teaches us that when all doors on earth close, the doors of heaven remain open.</p>
                     `,
                     content_ur: `
-                <h3> نزول کا پس منظر</h3>
+                < h3 > نزول کا پس منظر</h3 >
                         <p>سورہ یوسف "عام الحزن" (غم کے سال) میں نازل ہوئی، جب نبی کریم ﷺ نے اپنی پیاری زوجہ حضرت خدیجہ (رض) اور اپنے چچا ابو طالب کو کھو دیا تھا۔ آپ ﷺ انتہائی غمگین تھے اور سخت مخالفت کا سامنا کر رہے تھے۔ اللہ نے یہ سورہ صرف ایک قصے کے طور پر نہیں بلکہ ایک تسلی کے طور پر بھیجی—کہ "اے محمد ﷺ، اگر یوسف کنویں کی گہرائی سے مصر کے تخت تک پہنچ سکتے ہیں، تو آپ کا مشن بھی قوم کی سازشوں کے باوجود کامیاب ہوگا۔"</p>
 
                         <h3>قیادت کا خواب</h3>
@@ -610,7 +610,7 @@ window.DASHBOARD_DATA = {
                     title: "Historical Context & Temptation",
                     duration: "Read: 25 min",
                     content_en: `
-                <h3> From Palestine to Egypt</h3>
+                < h3 > From Palestine to Egypt</h3 >
                         <p>Yusuf (AS) was taken by a caravan and sold in Egypt for a "paltry price" (Dirhameen Ma'dudaat). Historians suggest this was during the Hyksos (Shepherd Kings) dynasty in Egypt, not the traditional Pharaohs of Musa's time, which explains why the ruler is addressed as "Al-Aziz" or "Al-Malik" (The King) in this Surah rather than Pharaoh.</p>
 
                         <h3>The Test of Youth and Beauty</h3>
@@ -634,7 +634,7 @@ window.DASHBOARD_DATA = {
                         <br><b>Reflection:</b> Sometimes, we must choose "social suicide" or financial loss to preserve our integrity. Yusuf chose the physical hardship of prison over the spiritual death of sin.</p>
                     `,
                     content_ur: `
-                <h3> فلسطین سے مصر تک</h3>
+                < h3 > فلسطین سے مصر تک</h3 >
                         <p>یوسف (علیہ السلام) کو ایک قافلے نے اٹھایا اور مصر میں "تھوڑی سی قیمت" (دراہم معدودہ) پر بیچ دیا۔ مؤرخین کا خیال ہے کہ یہ مصر میں ہائکسوس (چرواہے بادشاہوں) کے دور کا واقعہ ہے، نہ کہ موسیٰ کے دور کے روایتی فرعونوں کا، یہی وجہ ہے کہ اس سورہ میں حکمران کو فرعون کے بجائے "العزیز" یا "الملک" (بادشاہ) کہا گیا ہے۔</p>
 
                         <h3>جوانی اور حسن کا امتحان</h3>
@@ -662,7 +662,7 @@ window.DASHBOARD_DATA = {
                     title: "The Dreamer Interprets: Prison to Palace",
                     duration: "Read: 18 min",
                     content_en: `
-                <h3> Dawah in the Dungeon</h3>
+                < h3 > Dawah in the Dungeon</h3 >
                         <p>Yusuf (AS) was not just a prisoner; he was a Da'ee (Caller to Allah). When two fellow prisoners asked for dream interpretations, he didn't just answer them. He first invited them to Tawheed: <i>"O my two companions of prison, are separate lords better or Allah, the One, the Prevailing?"</i> (12:39).
                         <br><b>Lesson:</b> Never let your environment define your mission. Even in jail, Yusuf (AS) was serving Allah.</p>
 
@@ -682,7 +682,7 @@ window.DASHBOARD_DATA = {
                         <p>When the King ordered his release, Yusuf (AS) refused to leave until his name was cleared regarding the women. He did not want to serve the King with a stained reputation. He demanded an inquiry. The Aziz's wife eventually confessed: <i>"Now the truth has become evident. It was I who sought to seduce him."</i> (12:51).</p>
                     `,
                     content_ur: `
-                <h3> قید خانے میں دعوت</h3>
+                < h3 > قید خانے میں دعوت</h3 >
                         <p>یوسف (علیہ السلام) صرف ایک قیدی نہیں تھے؛ وہ ایک داعی (اللہ کی طرف بلانے والے) تھے۔ جب دو قیدی ساتھیوں نے خواب کی تعبیر پوچھی، تو انہوں نے صرف جواب نہیں دیا۔ انہوں نے پہلے انہیں توحید کی دعوت دی: <i>"اے میرے قید خانے کے دو ساتھیو، کیا متفرق رب بہتر ہیں یا اللہ، جو اکیلا اور زبردست ہے؟"</i> (12:39)۔
                         <br><b>سبق:</b> اپنے ماحول کو اپنے مشن کی تعریف نہ کرنے دیں۔ جیل میں بھی، یوسف (علیہ السلام) اللہ کی خدمت کر رہے تھے۔</p>
 
@@ -706,7 +706,7 @@ window.DASHBOARD_DATA = {
                     title: "The Reunion: Power & Forgiveness",
                     duration: "Read: 20 min",
                     content_en: `
-                <h3> The Brothers Return</h3>
+                < h3 > The Brothers Return</h3 >
                         <p>The famine hit the region, forcing Yusuf's brothers to travel from Canaan to Egypt for food. They stood before Yusuf, but did not recognize him in his royal attire. Yusuf, however, recognized them immediately.</p>
 
                         <h3>The Scheme to Keep Benjamin</h3>

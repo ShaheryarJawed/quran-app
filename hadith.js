@@ -67,7 +67,16 @@ class HadithManager {
     renderBooks() {
         console.log("HadithManager: renderBooks called. Books count:", this.books.length);
         if (!this.booksView) {
-            console.error("HadithManager: booksView not found!");
+            console.error("HadithManager: booksView element not found! Retrying...");
+            // Retry after a short delay
+            setTimeout(() => {
+                this.booksView = document.getElementById('hadith-books-view');
+                if (this.booksView) {
+                    this.renderBooks();
+                } else {
+                    console.error("HadithManager: Still can't find hadith-books-view element!");
+                }
+            }, 100);
             return;
         }
         this.booksView.innerHTML = this.books.map(book => {
@@ -203,7 +212,7 @@ class HadithManager {
                     <span class="hadith-number-badge">Hadith #${hadith.hadithnumber}</span>
                     <div class="quote-actions">
                         <button class="action-btn-mini" onclick="event.stopPropagation(); hadithManager.copyHadith(${hadith.hadithnumber})"><i class='bx bx-copy'></i></button>
-                        <button class="action-btn-mini" onclick="event.stopPropagation(); alert('Share feature coming soon!')"><i class='bx bx-share-alt'></i></button>
+                        <button class="action-btn-mini" onclick="event.stopPropagation(); hadithManager.shareHadith(${hadith.hadithnumber})"><i class='bx bx-share-alt'></i></button>
                     </div>
                 </div>
                 <div class="quote-body">
@@ -223,6 +232,16 @@ class HadithManager {
         const text = hadith.text || "معذرت، اس حدیث کا اردو ترجمہ ابھی دستیاب نہیں ہے۔";
         return text.length > 100 ? text.substring(0, 100) + '...' : text;
     }
+
+    // ... (rest of search/open methods unchanged) ... Handle via multi-replace or context?
+    // Wait, replace_file_content replaces a block. I need to replace renderListItems AND add shareHadith.
+    // I will use multi_replace for safety since they are far apart (renderListItems at 200, shareHadith at 600).
+    // Ah, multi_replace is available.
+    // Actually renderListItems is relatively small.
+    // I'll stick to single replace for `shareHadith` insertion and separate call for render update if needed.
+    // But Render is at line 199. shareHadith at 600.
+    // I'll use multi_replace.
+
 
     handleSearch(query) {
         if (!query) {
@@ -273,14 +292,14 @@ class HadithManager {
                 // Allow filtering books by name
                 const filteredBooks = this.books.filter(b => b.name.toLowerCase().includes(lowerQuery));
                 this.booksView.innerHTML = filteredBooks.map(book => `
-                    <div class="surah-card" onclick="hadithManager.loadBook('${book.id}')">
+    < div class="surah-card" onclick = "hadithManager.loadBook('${book.id}')" >
                         <div class="surah-number"><span>📖</span></div>
                         <div class="surah-info"><h3>${book.name}</h3></div>
-                    </div>
-                `).join('');
+                    </div >
+    `).join('');
 
                 if (filteredBooks.length === 0) {
-                    this.booksView.innerHTML = `<p style="text-align:center; width:100%; color:var(--text-secondary);">No books found matching "${query}"</p>`;
+                    this.booksView.innerHTML = `< p style = "text-align:center; width:100%; color:var(--text-secondary);" > No books found matching "${query}"</p > `;
                 }
             }
         }
@@ -296,33 +315,33 @@ class HadithManager {
     }
 
     renderHadithDetail(hadith) {
-        this.detailBookName.textContent = `${this.currentBook.name} - Hadith ${hadith.hadithnumber}`;
+        this.detailBookName.textContent = `${this.currentBook.name} - Hadith ${hadith.hadithnumber} `;
 
         // Check for arabic/urdu separation. In bukhari.json we saw 'text' is Urdu. 
         // We will assume 'text' is the main content.
 
         let html = `
-            <div class="ayah-header">
-                <span class="ayah-number-badge">${hadith.hadithnumber}</span>
-            </div>
-        `;
+    < div class="ayah-header" >
+        <span class="ayah-number-badge">${hadith.hadithnumber}</span>
+            </div >
+    `;
 
         if (hadith.arabic) {
-            html += `<div class="arabic-text-large">${hadith.arabic}</div>`;
+            html += `< div class="arabic-text-large" > ${hadith.arabic}</div > `;
         }
 
         // Urdu / Main Text
         // Using 'urdu-translation' class for consistent styling with Quran module if it is indeed Urdu
-        html += `<p class="urdu-translation" style="margin-top:1.5rem;">${hadith.text}</p>`;
+        html += `< p class="urdu-translation" style = "margin-top:1.5rem;" > ${hadith.text}</p > `;
 
         // Grades/Reference if available
         if (hadith.grades && hadith.grades.length > 0) {
             html += `
-                <div class="hadith-grades" style="margin-top: 2rem; padding: 1rem; background: var(--bg-card); border-radius: 8px;">
-                    <h4>Grades:</h4>
+    < div class="hadith-grades" style = "margin-top: 2rem; padding: 1rem; background: var(--bg-card); border-radius: 8px;" >
+        <h4>Grades:</h4>
                     ${hadith.grades.map(g => `<div><span class="tag">${g.grade}</span> - ${g.name}</div>`).join('')}
-                </div>
-            `;
+                </div >
+    `;
         }
 
         this.contentContainer.innerHTML = html;
@@ -431,17 +450,17 @@ class HadithManager {
 
             if (scholarId === 'ibnkathir') {
                 intro = "امام ابن کثیر کی تفسیر اپنی اسناد اور روایات کے لیے مشہور ہے۔";
-                content = `<h3>ابن کثیر کی تشریح</h3><p>یہ حدیث اس بات کی دلیل ہے کہ اعمال کا وزن نیت کے پلڑے میں ہوتا ہے۔۔۔</p>` + content;
+                content = `< h3 > ابن کثیر کی تشریح</h3 > <p>یہ حدیث اس بات کی دلیل ہے کہ اعمال کا وزن نیت کے پلڑے میں ہوتا ہے۔۔۔</p>` + content;
             } else if (scholarId === 'israr') {
                 intro = "ڈاکٹر اسرار احمد کا بیان قرآن و حدیث کے انقلابی پہلوؤں پر زور دیتا ہے۔";
-                content = `<h3>بصیرت</h3><p>اس حدیث میں امت کے لیے ایک عظیم فکری پیغام ہے۔۔۔</p>` + content;
+                content = `< h3 > بصیرت</h3 > <p>اس حدیث میں امت کے لیے ایک عظیم فکری پیغام ہے۔۔۔</p>` + content;
             }
 
             return { intro, content };
         };
 
         const modalContentHTML = `
-            <div>
+    < div >
                 <div class="tafsir-header">
                     <div class="tafsir-title-badge">
                         <i class='bx bxs-book-content'></i>
@@ -450,7 +469,7 @@ class HadithManager {
                     <div class="tafsir-title-main">تشریح و فوائد</div>
                 </div>
 
-                <!-- Scholar Selection -->
+                <!--Scholar Selection-- >
                 <div class="scholar-select-container">
                     <label>Select Scholar (تفاسیر)</label>
                     <div class="custom-select-wrapper">
@@ -461,7 +480,7 @@ class HadithManager {
                     </div>
                 </div>
 
-                <!-- Audio Player (Placeholder) -->
+                <!--Audio Player(Placeholder)-- >
                 <div id="tafsir-audio-container" class="tafsir-audio-player hidden">
                     <div class="audio-info">
                         <div class="audio-icon"><i class='bx bx-play'></i></div>
@@ -473,8 +492,8 @@ class HadithManager {
                 <div id="tafsir-body-content" style="padding: 0 0.5rem;">
                     <!-- Content Injected via JS -->
                 </div>
-            </div>
-        `;
+            </div >
+    `;
 
         // Universal Modal Logic
         let modal = document.getElementById('info-modal');
@@ -484,11 +503,11 @@ class HadithManager {
             modal.className = 'modal-overlay';
             // Note: Added simple inline styles for quick modal fix if css missing
             modal.innerHTML = `
-                <div class="modal-container">
+    < div class="modal-container" >
                     <button class="close-modal" onclick="closeModal()">&times;</button>
                     <div id="modal-content"></div>
-                </div>
-            `;
+                </div >
+    `;
             document.body.appendChild(modal);
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) closeModal();
@@ -533,24 +552,24 @@ class HadithManager {
             }
 
             contentHtml = `
-                <div class="tafsir-intro-box">
+    < div class="tafsir-intro-box" >
                     <div class="tafsir-intro-title">
                         <i class='bx bxs-bulb'></i>
                         تعارف (Introduction)
                     </div>
                     <p style="margin:0; line-height:1.8; color:#78350f;">${intro}</p>
-                </div>
-                <div class="tafsir-content-text">
-                    ${content}
-                </div>
-            `;
+                </div >
+    <div class="tafsir-content-text">
+        ${content}
+    </div>
+`;
         } else {
             contentHtml = `
-                <div style="text-align:center; padding:2rem; color:var(--text-slate);">
+    < div style = "text-align:center; padding:2rem; color:var(--text-slate);" >
                     <i class='bx bx-book-content' style="font-size:3rem; margin-bottom:1rem; opacity:0.5;"></i>
                     <p>اس عالم کی تشریح ابھی دستیاب نہیں ہے۔</p>
-                </div>
-            `;
+                </div >
+    `;
         }
 
         container.innerHTML = contentHtml;
@@ -597,7 +616,7 @@ class HadithManager {
         const hadith = this.currentHadithList.find(h => h.hadithnumber == hadithNumber);
         if (!hadith) return;
 
-        const textToCopy = `Hadith #${hadith.hadithnumber} - ${this.currentBook.name}\n\n${hadith.text}\n\nRead more at DeenSphere Pro`;
+        const textToCopy = `Hadith #${hadith.hadithnumber} - ${this.currentBook.name} \n\n${hadith.text} \n\nRead more at DeenSphere Pro`;
 
         try {
             await navigator.clipboard.writeText(textToCopy);
@@ -615,6 +634,29 @@ class HadithManager {
         }
     }
 
+    async shareHadith(hadithNumber) {
+        const hadith = this.currentHadithList.find(h => h.hadithnumber == hadithNumber);
+        if (!hadith) return;
+
+        const textToShare = `${hadith.text}\n\nReference: ${this.currentBook.name}, Hadith ${hadith.hadithnumber}\nRead more on DeenSphere`;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: 'Hadith of the Day',
+                    text: textToShare,
+                    url: window.location.href
+                });
+                console.log('Shared successfully');
+            } catch (err) {
+                console.log('Error sharing:', err);
+            }
+        } else {
+            // Fallback to Copy
+            this.copyHadith(hadithNumber);
+        }
+    }
+
     showToast(message) {
         // Create toast element on the fly if it doesn't exist (cleaner than polluting HTML)
         let toast = document.getElementById('hadith-toast');
@@ -622,7 +664,7 @@ class HadithManager {
             toast = document.createElement('div');
             toast.id = 'hadith-toast';
             toast.className = 'toast-notification';
-            toast.innerHTML = `<i class='bx bxs-check-circle'></i> <span id="toast-msg"></span>`;
+            toast.innerHTML = `< i class='bx bxs-check-circle' ></i > <span id="toast-msg"></span>`;
             document.body.appendChild(toast);
         }
 

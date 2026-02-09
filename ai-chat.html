@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#fbbf24">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DeenSphere">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <title>AI Islamic Scholar - DeenSphere</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400..700&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3.0">
+
+    <style>
+        /* AI Chat Specific Styles */
+        .ai-chat-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 1rem;
+            height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-hero {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(16, 185, 129, 0.1));
+            border-radius: 24px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .ai-hero-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2.5rem;
+            color: #0f172a;
+            box-shadow: 0 10px 40px rgba(251, 191, 36, 0.3);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                box-shadow: 0 10px 40px rgba(251, 191, 36, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 10px 60px rgba(251, 191, 36, 0.5);
+            }
+        }
+
+        .ai-hero h1 {
+            font-family: 'Amiri', serif;
+            font-size: 2rem;
+            color: #fbbf24;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-hero p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 1rem 1.25rem;
+            border-radius: 18px;
+            animation: fadeInUp 0.3s ease;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.ai .source-tag {
+            display: inline-block;
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .message.ai .arabic-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.4rem;
+            color: #fbbf24;
+            display: block;
+            margin: 0.5rem 0;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .message.ai .urdu-text {
+            font-family: 'Noto Nastaliq Urdu', serif;
+            direction: rtl;
+            text-align: right;
+            color: #cbd5e1;
+        }
+
+        .message.loading {
+            display: flex;
+            gap: 0.3rem;
+            padding: 1rem 1.5rem;
+        }
+
+        .message.loading .dot {
+            width: 8px;
+            height: 8px;
+            background: #fbbf24;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .message.loading .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .message.loading .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        .chat-input-container {
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px 24px 0 0;
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .chat-input-wrapper:focus-within {
+            border-color: #fbbf24;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .chat-input::placeholder {
+            color: #64748b;
+        }
+
+        .send-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: none;
+            color: #0f172a;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(251, 191, 36, 0.4);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 1rem 0;
+            justify-content: center;
+        }
+
+        .suggestion-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .suggestion-chip:hover {
+            background: rgba(251, 191, 36, 0.1);
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+
+        .clear-chat-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .clear-chat-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+            transform: scale(1.1);
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+
+        .mobile-nav-items {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.7rem;
+            padding: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .mobile-nav-item.active {
+            color: #fbbf24;
+        }
+
+        @media (max-width: 768px) {
+            .portal-nav {
+                display: none;
+            }
+
+            .mobile-nav {
+                display: block;
+            }
+
+            .ai-chat-container {
+                height: calc(100vh - 140px);
+                padding-bottom: 70px;
+            }
+
+            .ai-hero {
+                padding: 1.5rem 1rem;
+            }
+
+            .ai-hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .chat-input-container {
+                border-radius: 0;
+                position: fixed;
+                bottom: 60px;
+                left: 0;
+                right: 0;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .clear-chat-btn {
+                bottom: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body class="portal-body">
+
+    <!-- TOP NAVIGATION BAR -->
+    <nav class="portal-nav">
+        <div class="portal-container nav-flex">
+            <div class="nav-brand-portal">
+                <i class='bx bxs-moon pulse-icon'></i>
+                <span>DeenSphere <span style="font-weight:300; opacity:0.7;">Pro</span></span>
+            </div>
+
+            <div class="nav-links-portal">
+                <a href="index.html" class="p-link">Dashboard</a>
+                <a href="quran.html" class="p-link">Quran</a>
+                <a href="hadith.html" class="p-link">Hadith</a>
+                <a href="seerah.html" class="p-link">Seerah</a>
+                <a href="tasbih.html" class="p-link">Tasbih</a>
+                <a href="duas.html" class="p-link">Duas</a>
+            </div>
+
+            <div id="header-actions-container" class="nav-actions-portal">
+                <div id="auth-container">
+                    <button id="btn-signin" class="btn-portal-secondary"
+                        style="color:white; border-color:rgba(255,255,255,0.3); padding:0.4rem 1.2rem; font-size:0.9rem;">
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="ai-chat-container">
+
+        <!-- AI Hero Section -->
+        <div class="ai-hero" id="ai-hero">
+            <div class="ai-hero-icon">
+                <i class='bx bx-book-reader'></i>
+            </div>
+            <h1>🌙 AI Islamic Scholar</h1>
+            <p>Apna sawal puchiye - Quran, Hadith, Fiqh, Seerah ya kisi bhi Islamic topic par. Jawab Urdu/English mein
+                milega with proper references.</p>
+        </div>
+
+        <!-- Suggestion Chips -->
+        <div class="suggestion-chips" id="suggestions">
+            <button class="suggestion-chip" onclick="askSuggestion(this)">نماز میں سورہ فاتحہ کا حکم؟</button>
+            <button class="suggestion-chip" onclick="askSuggestion(this)">What is Zakat?</button>
+            <button class="suggestion-chip" onclick="askSuggestion(this)">روزے کے فضائل بتائیں</button>
+            <button class="suggestion-chip" onclick="askSuggestion(this)">Prophet ﷺ ki Seerah</button>
+            <button class="suggestion-chip" onclick="askSuggestion(this)">Surah Yaseen ki fazilat</button>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be added here dynamically -->
+        </div>
+
+        <!-- Clear Chat Button -->
+        <button class="clear-chat-btn" id="clear-chat-btn" title="Clear Chat" onclick="clearChat()"
+            style="display: none;">
+            <i class='bx bx-trash'></i>
+        </button>
+
+        <!-- Chat Input -->
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <input type="text" class="chat-input" id="chat-input"
+                    placeholder="Apna sawal yahan likhiye... (Urdu/English)" autocomplete="off">
+                <button class="send-btn" id="send-btn" onclick="sendMessage()">
+                    <i class='bx bx-send'></i>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-items">
+            <a href="index.html" class="mobile-nav-item">
+                <i class='bx bx-home'></i>
+                <span>Home</span>
+            </a>
+            <a href="quran.html" class="mobile-nav-item">
+                <i class='bx bx-book-open'></i>
+                <span>Quran</span>
+            </a>
+            <a href="ai-chat.html" class="mobile-nav-item active">
+                <i class='bx bx-bot'></i>
+                <span>AI Scholar</span>
+            </a>
+            <a href="hadith.html" class="mobile-nav-item">
+                <i class='bx bx-library'></i>
+                <span>Hadith</span>
+            </a>
+            <a href="duas.html" class="mobile-nav-item">
+                <i class='bx bx-heart'></i>
+                <span>Duas</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="shared_auth.js"></script>
+    <script src="ai_chat.js?v=5"></script>
+</body>
+
+</html>
