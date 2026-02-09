@@ -124,18 +124,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Setup event listeners
 function setupEventListeners() {
-    // Send on Enter key
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-        }
-    });
+    // Send on Enter key - use keydown for better responsiveness
+    if (chatInput) {
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
 
-    // Auto-resize input (if using textarea in future)
-    chatInput.addEventListener('input', () => {
-        sendBtn.disabled = chatInput.value.trim() === '';
-    });
+        // Auto-resize input (if using textarea in future)
+        chatInput.addEventListener('input', () => {
+            sendBtn.disabled = chatInput.value.trim() === '';
+        });
+    }
 }
 
 // Send message function
