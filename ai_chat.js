@@ -3,20 +3,29 @@
  * Gemini API Integration for Islamic Q&A
  */
 
-// Login Protection - AI Scholar is for logged-in users only
-const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-if (!currentUser) {
-    // Show login required message and redirect
-    document.addEventListener('DOMContentLoaded', () => {
-        document.body.innerHTML = `
+// Login Protection - Check auth status
+let isUserLoggedIn = false;
+
+function checkAuthStatus() {
+    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    isUserLoggedIn = !!user;
+    return isUserLoggedIn;
+}
+
+// Initial auth check
+checkAuthStatus();
+
+// Show login required page if not logged in
+function showLoginRequired() {
+    const container = document.querySelector('.ai-chat-container');
+    if (container) {
+        container.innerHTML = `
             <div style="
-                min-height: 100vh;
+                min-height: 60vh;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                background: linear-gradient(135deg, #0f172a, #1e293b);
-                color: white;
                 text-align: center;
                 padding: 2rem;
             ">
@@ -35,8 +44,7 @@ if (!currentUser) {
                     text-decoration: none;
                     font-weight: 600;
                     font-size: 1.1rem;
-                    transition: transform 0.3s;
-                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                ">
                     Sign In to Continue
                 </a>
                 <a href="index.html" style="color: #64748b; margin-top: 1rem; text-decoration: none;">
@@ -44,8 +52,7 @@ if (!currentUser) {
                 </a>
             </div>
         `;
-    });
-    throw new Error('User not logged in - AI Scholar requires authentication');
+    }
 }
 
 // Gemini API Configuration
@@ -118,6 +125,11 @@ const clearChatBtn = document.getElementById('clear-chat-btn');
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Check auth first
+    if (!checkAuthStatus()) {
+        showLoginRequired();
+        return;
+    }
     loadChatHistory();
     setupEventListeners();
 });
@@ -142,6 +154,12 @@ function setupEventListeners() {
 
 // Send message function
 async function sendMessage() {
+    // Check auth first
+    if (!checkAuthStatus()) {
+        showLoginRequired();
+        return;
+    }
+
     const message = chatInput.value.trim();
     if (!message || isProcessing) return;
 
