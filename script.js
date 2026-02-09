@@ -90,9 +90,11 @@ function updatePremiumDashboard() {
     // 1. Show Cards
     const resumeCard = document.getElementById('card-resume');
     const vaultCard = document.getElementById('card-vault');
+    const aiScholarCard = document.getElementById('card-ai-scholar');
 
     if (resumeCard) resumeCard.style.display = 'block';
     if (vaultCard) vaultCard.style.display = 'block';
+    if (aiScholarCard) aiScholarCard.style.display = 'block';
 
     // 2. Resume Logic
     const lastRead = JSON.parse(localStorage.getItem('user_last_read'));

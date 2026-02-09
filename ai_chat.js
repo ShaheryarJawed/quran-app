@@ -3,6 +3,51 @@
  * Gemini API Integration for Islamic Q&A
  */
 
+// Login Protection - AI Scholar is for logged-in users only
+const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+if (!currentUser) {
+    // Show login required message and redirect
+    document.addEventListener('DOMContentLoaded', () => {
+        document.body.innerHTML = `
+            <div style="
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #0f172a, #1e293b);
+                color: white;
+                text-align: center;
+                padding: 2rem;
+            ">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🔐</div>
+                <h1 style="font-family: 'Amiri', serif; color: #fbbf24; font-size: 2rem; margin-bottom: 1rem;">
+                    Login Required
+                </h1>
+                <p style="color: #94a3b8; font-size: 1.1rem; max-width: 400px; margin-bottom: 2rem;">
+                    AI Islamic Scholar sirf logged-in users ke liye hai. Please sign in karein.
+                </p>
+                <a href="auth.html" style="
+                    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+                    color: #0f172a;
+                    padding: 1rem 2rem;
+                    border-radius: 12px;
+                    text-decoration: none;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                    transition: transform 0.3s;
+                " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    Sign In to Continue
+                </a>
+                <a href="index.html" style="color: #64748b; margin-top: 1rem; text-decoration: none;">
+                    ← Back to Dashboard
+                </a>
+            </div>
+        `;
+    });
+    throw new Error('User not logged in - AI Scholar requires authentication');
+}
+
 // Gemini API Configuration
 const GEMINI_API_KEY = 'AIzaSyC6CqVWrbaMhH6Awp6F_FHqFsoczKmUgDE';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent';
