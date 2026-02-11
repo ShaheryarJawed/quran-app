@@ -14,7 +14,8 @@ html {
 
 body {
   overflow-y: scroll !important;
-  min-height: 101vh !important; /* Force scrollbar by making body taller */
+  min-height: 101vh !important;
+  /* Force scrollbar by making body taller */
 }
 
 /* Ensure body accounts for fixed navbar */
@@ -22,7 +23,8 @@ body {
   padding-top: 80px !important;
 }
 
-main, .main-content {
+main,
+.main-content {
   padding-top: 1rem !important;
 }
 
@@ -185,6 +187,8 @@ body.hadith-dark-theme {
   background-image: none;
   /* Clean dark background as per screenshot appears very solid dark */
   color: #e2e8f0;
+  padding-top: 70px;
+  /* Account for fixed navbar */
 }
 
 .hadith-dark-theme .top-navbar {
@@ -1814,6 +1818,20 @@ button {
   color: #f1f5f9;
   font-family: 'Inter', sans-serif;
   min-height: 100vh;
+  padding-top: 70px;
+  /* Account for fixed navbar */
+}
+
+.portal-body.hadith-dark-theme {
+  background-color: #022c22;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(4, 120, 87, 0.4) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(217, 119, 6, 0.2) 0%, transparent 40%);
+  color: #f1f5f9;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  padding-top: 70px;
+  /* Account for fixed navbar */
 }
 
 .portal-container {
@@ -3583,8 +3601,11 @@ audio {
     radial-gradient(circle at 90% 80%, rgba(217, 119, 6, 0.2) 0%, transparent 40%) !important;
   backdrop-filter: blur(12px) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-  position: sticky;
+  position: fixed !important;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index: 1000;
   padding: 1rem 0;
 }

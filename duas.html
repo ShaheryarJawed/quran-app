@@ -275,6 +275,18 @@
             </div>
             <!-- Profile/Actions -->
             <div id="header-actions-container" class="nav-actions-portal">
+                <!-- Global Search -->
+                <div class="global-search-wrapper" style="position: relative;">
+                    <div class="search-input-wrapper">
+                        <i class='bx bx-search'
+                            style="position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 1.1rem;"></i>
+                        <input type="text" id="global-search-input" placeholder="Search..."
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; padding: 0.5rem 1rem 0.5rem 2.5rem; color: white; font-size: 0.9rem; width: 250px; outline: none; transition: all 0.3s;">
+                    </div>
+                    <!-- Search Results Dropdown -->
+                    <div id="search-results" class="search-results-dropdown" style="display: none;"></div>
+                </div>
+
                 <div id="auth-container">
                     <!-- Default: Guest State -->
                     <a href="auth.html" id="btn-signin" class="btn-portal-secondary"
@@ -441,6 +453,7 @@
         });
 
     </script>
+    <script src="global_search.js"></script>
 </body>
 
 </html>
