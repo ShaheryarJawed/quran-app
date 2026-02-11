@@ -56,7 +56,7 @@ function showLoginRequired() {
 }
 
 // Gemini API Configuration
-const GEMINI_API_KEY = 'AIzaSyC6CqVWrbaMhH6Awp6F_FHqFsoczKmUgDE';
+const GEMINI_API_KEY = 'AIzaSyDYAcaeOcMX9oxyQdmZXT_67KOHW_OOgXc';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent';
 
 // Islamic Scholar System Prompt
