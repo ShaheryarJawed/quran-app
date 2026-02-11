@@ -9,3 +9,14 @@ __pycache__/
 
 # Protect API keys
 ai_chat.js
+
+# Development folders (don't deploy)
+scripts/
+backup/
+
+# Large source data files (don't deploy)
+data/quran/*.json
+data/hadith/*.json
+data/tafsir/*.json
+data/other/missing_*.json
+data/other/*.sh
