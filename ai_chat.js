@@ -55,9 +55,33 @@ function showLoginRequired() {
     }
 }
 
-// Gemini API Configuration
-const GEMINI_API_KEY = 'AIzaSyDYAcaeOcMX9oxyQdmZXT_67KOHW_OOgXc';
+// API Configuration - Hugging Face (Primary) + Gemini (Fallback)
+// IMPORTANT: Replace these placeholder keys with your own API keys
+// Get your FREE Hugging Face API key from: https://huggingface.co/settings/tokens
+// Get your Gemini API key from: https://aistudio.google.com/apikey
+const HUGGINGFACE_API_KEY = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.HUGGINGFACE_API_KEY) || ''; // Add your Hugging Face API key here
+const GEMINI_API_KEY = (typeof APP_CONFIG !== 'undefined' && APP_CONFIG.GEMINI_API_KEY) || ''; // Add your Gemini API key here
+
+// Hugging Face Models (in priority order)
+const HF_MODELS = [
+    {
+        name: 'Llama 3.2 3B',
+        id: 'meta-llama/Llama-3.2-3B-Instruct',
+        limit: 1000, // requests per day
+        quality: 'high'
+    },
+    {
+        name: 'Gemma 2B',
+        id: 'google/gemma-2b-it',
+        limit: Infinity, // unlimited
+        quality: 'good'
+    }
+];
+
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent';
+
+// Track current model usage
+let currentModelIndex = 0;
 
 // Islamic Scholar System Prompt
 const SYSTEM_PROMPT = `You are "DeenSphere AI Scholar" - a knowledgeable, respectful, and authentic Islamic scholar assistant. Your role is to provide accurate Islamic knowledge based on the Quran and authentic Hadith sources.
@@ -184,7 +208,7 @@ async function sendMessage() {
     isProcessing = true;
 
     try {
-        const response = await callGeminiAPI(message);
+        const response = await callAI(message);
         removeLoading(loadingId);
         addMessage(response, 'ai');
         chatHistory.push({ role: 'assistant', content: response });
@@ -198,8 +222,118 @@ async function sendMessage() {
     isProcessing = false;
 }
 
-// Call Gemini API
+// Main AI API caller with fallback logic
+async function callAI(userMessage) {
+    // Try Hugging Face first (if API key is set)
+    if (HUGGINGFACE_API_KEY && HUGGINGFACE_API_KEY !== 'YOUR_HUGGINGFACE_API_KEY_HERE') {
+        try {
+            return await callHuggingFaceAPI(userMessage);
+        } catch (error) {
+            console.warn('Hugging Face failed, trying Gemini fallback:', error.message);
+            // Fall through to Gemini
+        }
+    }
+
+    // Fallback to Gemini
+    return await callGeminiAPI(userMessage);
+}
+
+// Call Hugging Face API with model fallback
+async function callHuggingFaceAPI(userMessage) {
+    // Build conversation context for Hugging Face
+    const recentHistory = chatHistory.slice(-10);
+
+    // Format conversation for Hugging Face (uses chat template)
+    let conversationText = SYSTEM_PROMPT + '\n\n---\n\n';
+
+    // Add history
+    for (const msg of recentHistory) {
+        const role = msg.role === 'user' ? 'User' : 'Assistant';
+        conversationText += `${role}: ${msg.content}\n\n`;
+    }
+
+    // Add current question
+    conversationText += `User: ${userMessage}\n\nAssistant:`;
+
+    // Try models in order
+    for (let i = currentModelIndex; i < HF_MODELS.length; i++) {
+        const model = HF_MODELS[i];
+
+        try {
+            console.log(`Trying ${model.name}...`);
+
+            const response = await fetch(
+                `https://api-inference.huggingface.co/models/${model.id}`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${HUGGINGFACE_API_KEY}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        inputs: conversationText,
+                        parameters: {
+                            max_new_tokens: 2048,
+                            temperature: 0.7,
+                            top_p: 0.95,
+                            return_full_text: false,
+                            do_sample: true,
+                        },
+                        options: {
+                            wait_for_model: true,
+                            use_cache: false
+                        }
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error(`${model.name} error:`, errorText);
+
+                // If rate limited, try next model
+                if (response.status === 429) {
+                    console.log(`${model.name} rate limited, trying next model...`);
+                    continue;
+                }
+                throw new Error(`API Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Handle different response formats
+            let generatedText = '';
+            if (Array.isArray(data) && data[0]?.generated_text) {
+                generatedText = data[0].generated_text;
+            } else if (data.generated_text) {
+                generatedText = data.generated_text;
+            } else {
+                throw new Error('Invalid response format');
+            }
+
+            // Clean up the response
+            generatedText = generatedText.trim();
+
+            // Success! Update current model index for next time
+            currentModelIndex = i;
+            console.log(`✓ Success with ${model.name}`);
+
+            return generatedText;
+
+        } catch (error) {
+            console.error(`${model.name} failed:`, error);
+            // Continue to next model
+        }
+    }
+
+    // All Hugging Face models failed
+    throw new Error('All Hugging Face models failed');
+}
+
+// Call Gemini API (kept as fallback)
 async function callGeminiAPI(userMessage) {
+    console.log('Using Gemini API (fallback)...');
+
     // Build conversation context
     const contents = [];
 

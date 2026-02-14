@@ -292,14 +292,14 @@ class HadithManager {
                 // Allow filtering books by name
                 const filteredBooks = this.books.filter(b => b.name.toLowerCase().includes(lowerQuery));
                 this.booksView.innerHTML = filteredBooks.map(book => `
-    < div class="surah-card" onclick = "hadithManager.loadBook('${book.id}')" >
+                    <div class="surah-card" onclick="hadithManager.loadBook('${book.id}')">
                         <div class="surah-number"><span>📖</span></div>
                         <div class="surah-info"><h3>${book.name}</h3></div>
-                    </div >
+                    </div>
     `).join('');
 
                 if (filteredBooks.length === 0) {
-                    this.booksView.innerHTML = `< p style = "text-align:center; width:100%; color:var(--text-secondary);" > No books found matching "${query}"</p > `;
+                    this.booksView.innerHTML = `<p style="text-align:center; width:100%; color:var(--text-secondary);">No books found matching "${query}"</p>`;
                 }
             }
         }
@@ -321,27 +321,27 @@ class HadithManager {
         // We will assume 'text' is the main content.
 
         let html = `
-    < div class="ayah-header" >
-        <span class="ayah-number-badge">${hadith.hadithnumber}</span>
-            </div >
-    `;
+            <div class="ayah-header">
+                <span class="ayah-number-badge">${hadith.hadithnumber}</span>
+            </div>
+        `;
 
         if (hadith.arabic) {
-            html += `< div class="arabic-text-large" > ${hadith.arabic}</div > `;
+            html += `<div class="arabic-text-large">${hadith.arabic}</div>`;
         }
 
         // Urdu / Main Text
         // Using 'urdu-translation' class for consistent styling with Quran module if it is indeed Urdu
-        html += `< p class="urdu-translation" style = "margin-top:1.5rem;" > ${hadith.text}</p > `;
+        html += `<p class="urdu-translation" style="margin-top:1.5rem;">${hadith.text}</p>`;
 
         // Grades/Reference if available
         if (hadith.grades && hadith.grades.length > 0) {
             html += `
-    < div class="hadith-grades" style = "margin-top: 2rem; padding: 1rem; background: var(--bg-card); border-radius: 8px;" >
-        <h4>Grades:</h4>
+                <div class="hadith-grades" style="margin-top: 2rem; padding: 1rem; background: var(--bg-card); border-radius: 8px;">
+                    <h4>Grades:</h4>
                     ${hadith.grades.map(g => `<div><span class="tag">${g.grade}</span> - ${g.name}</div>`).join('')}
-                </div >
-    `;
+                </div>
+            `;
         }
 
         this.contentContainer.innerHTML = html;
@@ -460,7 +460,7 @@ class HadithManager {
         };
 
         const modalContentHTML = `
-    < div >
+            <div>
                 <div class="tafsir-header">
                     <div class="tafsir-title-badge">
                         <i class='bx bxs-book-content'></i>
@@ -469,7 +469,7 @@ class HadithManager {
                     <div class="tafsir-title-main">تشریح و فوائد</div>
                 </div>
 
-                <!--Scholar Selection-- >
+                <!--Scholar Selection-->
                 <div class="scholar-select-container">
                     <label>Select Scholar (تفاسیر)</label>
                     <div class="custom-select-wrapper">
@@ -480,7 +480,7 @@ class HadithManager {
                     </div>
                 </div>
 
-                <!--Audio Player(Placeholder)-- >
+                <!--Audio Player(Placeholder)-->
                 <div id="tafsir-audio-container" class="tafsir-audio-player hidden">
                     <div class="audio-info">
                         <div class="audio-icon"><i class='bx bx-play'></i></div>
@@ -492,8 +492,8 @@ class HadithManager {
                 <div id="tafsir-body-content" style="padding: 0 0.5rem;">
                     <!-- Content Injected via JS -->
                 </div>
-            </div >
-    `;
+            </div>
+        `;
 
         // Universal Modal Logic
         let modal = document.getElementById('info-modal');
@@ -503,11 +503,11 @@ class HadithManager {
             modal.className = 'modal-overlay';
             // Note: Added simple inline styles for quick modal fix if css missing
             modal.innerHTML = `
-    < div class="modal-container" >
+                <div class="modal-container">
                     <button class="close-modal" onclick="closeModal()">&times;</button>
                     <div id="modal-content"></div>
-                </div >
-    `;
+                </div>
+            `;
             document.body.appendChild(modal);
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) closeModal();
@@ -552,24 +552,24 @@ class HadithManager {
             }
 
             contentHtml = `
-    < div class="tafsir-intro-box" >
+                <div class="tafsir-intro-box">
                     <div class="tafsir-intro-title">
                         <i class='bx bxs-bulb'></i>
                         تعارف (Introduction)
                     </div>
                     <p style="margin:0; line-height:1.8; color:#78350f;">${intro}</p>
-                </div >
-    <div class="tafsir-content-text">
-        ${content}
-    </div>
-`;
+                </div>
+                <div class="tafsir-content-text">
+                    ${content}
+                </div>
+            `;
         } else {
             contentHtml = `
-    < div style = "text-align:center; padding:2rem; color:var(--text-slate);" >
+                <div style="text-align:center; padding:2rem; color:var(--text-slate);">
                     <i class='bx bx-book-content' style="font-size:3rem; margin-bottom:1rem; opacity:0.5;"></i>
                     <p>اس عالم کی تشریح ابھی دستیاب نہیں ہے۔</p>
-                </div >
-    `;
+                </div>
+            `;
         }
 
         container.innerHTML = contentHtml;
@@ -664,7 +664,7 @@ class HadithManager {
             toast = document.createElement('div');
             toast.id = 'hadith-toast';
             toast.className = 'toast-notification';
-            toast.innerHTML = `< i class='bx bxs-check-circle' ></i > <span id="toast-msg"></span>`;
+            toast.innerHTML = `<i class='bx bxs-check-circle'></i> <span id="toast-msg"></span>`;
             document.body.appendChild(toast);
         }
 

@@ -7,8 +7,8 @@ __pycache__/
 .vercel
 .env*.local
 
-# Protect API keys
-ai_chat.js
+# Protect API keys - local config only
+config.local.js
 
 # Development folders (don't deploy)
 scripts/
